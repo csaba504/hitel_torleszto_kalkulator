@@ -1,0 +1,47 @@
+.printtable {
+    border: 1px solid #7D7D7D;
+    width: 100%;
+}
+
+.printtable td, .printtable th {
+    border: 1px solid #7D7D7D
+}
+
+.printtable td {
+    text-align: right;
+}
+
+input {
+    text-align: right;
+}
+
+.printouts {
+    height: 500px;
+    width: 1024px;
+    overflow: auto;
+}
+
+.inputs {
+    margin-bottom: 20px;
+}
+
+.input-table {
+    display: box;
+    margin: 35px;
+    background-color: rgba(173,173,173,.1);
+    border: 1px solid #C5D6DE;
+    padding: 15px;
+}
+
+.pre-inputs td {
+    padding: 5px;
+}
+
+.result-cell {
+    text-align: right;
+    padding: 10px;
+}
+
+.blue-border {
+    border: 2px solid green;
+}
