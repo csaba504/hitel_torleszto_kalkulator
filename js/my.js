@@ -204,6 +204,7 @@ var tabledata = new Array();
 
 // szamolo
 function calc() {
+	//// Default setup
     var futamido = getNumVal($('#run')) * 12.0;
     var new_futamido = futamido;
     var mar_befizetett = 0;
@@ -211,16 +212,14 @@ function calc() {
     var remain = getNumVal($('#loan'));
     var torleszto = getNumVal($('#due'));
     var i, j, prev, kamattorl, toketorl, loss = 0, lloss, min;
-    var tmp = '<table id="tabla" class="printtable"><tr><th>Hónap</th><th>Hó eleji egyenleg</th><th>Törlesztő</th><th>Kamat</th><th>Tőke</th><th>Akt. hó végéig fizetett</th><th>Hó végi egyenleg</th></tr></table>';
-    // $('#printouts').html(tmp);
     tableinstance.clear();
     diagramdata = [];
     diagramdata_year = [];
     tabledata = [];
-
     var elotorl = new Array();
     var temp = new Array();
 
+    
     // read elotorlesztesek
     for(j = 0; j < prefieldnum; j++) {
         var month = getNumVal($('#month-' + j));
@@ -237,11 +236,8 @@ function calc() {
         else {
             lloss = cost + Math.round(add * rate);
         }
-
         if(month > 0 && add > 0) temp.push([month, add, lloss, mode]);
     }
-
-    //sort Array
     for(i = 0; i < temp.length; i++) {
         prev = 0;
         min = futamido + 10;
@@ -261,51 +257,60 @@ function calc() {
         elotorl.push([temp[prev][0], temp[prev][1], temp[prev][2], temp[prev][3]]);
         temp[prev][0] = futamido + 10;
     }
+    
+    ///Generate without prepayment
+    
+    
+    
+    ///Generate data
+    
+    tabledata.push([0, '0', '0', '0', '0', '0', convert2Money2(remain)]);
+    diagramdata.push([0,remain]);
+    diagramdata_year.push([0,remain]);
+    
+    for(honap = 1; honap <= futamido && remain > 0; honap++) {
+        for(j = 0; j < elotorl.length; j++) {
+            var month = elotorl[j][0];
 
-    for(i = 0; i <= futamido && remain > 0; i++) {
-        if(i == 0) {
-            // tmp = '<tr><td>0.</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>' + convert2Money2(remain) + '</td></tr>';
-            tabledata.push([i, '0', '0', '0', '0', '0', convert2Money2(remain)]);
-            diagramdata.push([i,remain]);
-            diagramdata_year.push([i,remain]);
-        }
-        else {
-            for(j = 0; j < elotorl.length; j++) {
-                var month = elotorl[j][0];
+            if(honap == month) {
+                var add = elotorl[j][1];
+                var lloss = elotorl[j][2];
+                var mode = elotorl[j][3];
 
-                if(i == month) {
-                    var add = elotorl[j][1];
-                    var lloss = elotorl[j][2];
-                    var mode = elotorl[j][3];
-
-                    loss = loss + lloss;
-                    remain = remain - add;
-                    mar_befizetett = mar_befizetett + add;
-                    if(mode == 0) torleszto = torlesztoszamitas(remain,kamat,new_futamido);
-                    else new_futamido = futamidoszamitas(remain,kamat,torleszto,new_futamido);
-                    tabledata.push([i, '', '', '', convert2Money2(add), '', '']);
+                loss = loss + lloss;
+                remain = remain - add;
+                mar_befizetett = mar_befizetett + add;
+                if(mode == 0){
+                	torleszto = torlesztoszamitas(remain,kamat,new_futamido);
                 }
+                else{
+                	new_futamido = futamidoszamitas(remain,kamat,torleszto,new_futamido);
+                }
+                tabledata.push([honap, '', '', '', convert2Money2(add), '', '']);
             }
-
-            prev = remain;
-            kamattorl = Math.round(remain * kamat);
-            toketorl = torleszto - kamattorl;
-            remain = remain - toketorl;
-            loss = loss + kamattorl;
-            if(remain < 0) {
-                remain = 0;
-                toketorl = prev;
-                torleszto = toketorl + kamattorl;
-            }
-            mar_befizetett = mar_befizetett + toketorl;
-
-            tabledata.push([i, convert2Money2(prev), convert2Money2(torleszto), convert2Money2(kamattorl), convert2Money2(toketorl), convert2Money2(mar_befizetett + loss), convert2Money2(remain)]);
-            diagramdata.push([i,remain]);
-            if(i % 12 == 0) diagramdata_year.push([i/12,remain]);
-            new_futamido--;
         }
+
+        prev = remain;
+        kamattorl = Math.round(remain * kamat);
+        toketorl = torleszto - kamattorl;
+        remain = remain - toketorl;
+        loss = loss + kamattorl;
+        if(remain < 0) {
+            remain = 0;
+            toketorl = prev;
+            torleszto = toketorl + kamattorl;
+        }
+        mar_befizetett = mar_befizetett + toketorl;
+
+        tabledata.push([honap, convert2Money2(prev), convert2Money2(torleszto), convert2Money2(kamattorl), convert2Money2(toketorl), convert2Money2(mar_befizetett + loss), convert2Money2(remain)]);
+        diagramdata.push([honap,remain]);
+        if(honap % 12 == 0){
+        	diagramdata_year.push([honap/12,remain]);
+        }
+        new_futamido--;
     }
-    $('#fin-months').html((i - 1) + ' (' + parseInt((i - 1)/12) + ' év ' + ((i - 1)%12) + ' hónap)');
+    
+    $('#fin-months').html((honap - 1) + ' (' + parseInt((honap - 1)/12) + ' év ' + ((honap - 1)%12) + ' hónap)');
     $('#fin-loss').html(convert2Money2(loss) + ' Ft');
     $('#fin-total').html(convert2Money2(loss + getNumVal($('#loan'))) + ' Ft');
 

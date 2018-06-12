@@ -26,7 +26,7 @@
                         <td><label>Hitel összege: </label></td>
                         <td><input id="loan" class="money" type="text" placeholder="Hitel összege" value="18000000" onchange="calc();"></input> Ft</td>
                         <td></td>
-                        <td rowspan="4" style="border-left:1px solid grey;padding-left:35px;">Ebbe a részbe kerülnek a hitelkalkulátorból(bankmonitor, bankráció,...) kidobott értékek. <br/>Az "éves kamat" nem egyenlő a "THM"-mel.<br/>Ha nincs meg a kezdő törlesztőrészlet a "Törlesztő számítása" gomb segítségével kiszámolható egy optimális érték.</td>
+                        <td rowspan="4" style="border-left:1px solid grey;padding-left:35px;     width: 27%;">Ebbe a részbe kerülnek a hitelkalkulátorból(bankmonitor, bankráció,...) kidobott értékek. <br/>Az "éves kamat" nem egyenlő a "THM"-mel.<br/>Ha nincs meg a kezdő törlesztőrészlet a "Törlesztő számítása" gomb segítségével kiszámolható egy optimális érték.</td>
                         <td rowspan="4" style="border-left:1px solid grey;padding-left:35px; text-align: left;">
                             Kalkulációs adatok mentése: &nbsp;<button class="" id="data_export" type="button">Mentés</button><br/>
                             Kalkulációs adatok betöltése: <input class="" id="data_import" type="file" name="data_import"></input>
@@ -89,21 +89,45 @@
         </div>
 
         <div class="input-table blue-border">
-            <table id="results">
-                <tr>
-                    <td style="padding-right:35px;">Törlesztéshez szükséges hónapok</td>
-                    <td id="fin-months" class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-                    <td rowspan=3 style="border-left:1px solid grey;padding-left:35px;">Kalkulációs eredmények összefoglalva.<br/>EDGE böngészőben "Számol" gombra nyomva aktualizálódnak az eredmények.<br/>(Firefox, Chrome böngészőben elvileg automatikusan)<br/>Havi szimtű bontáshoz görgess lejjebb.</td>
-                </tr>
-                <tr>
-                    <td>Kamatok és költségek</td>
-                    <td id="fin-loss" class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-                </tr>
-                <tr>
-                    <td>Összesen fizetett</td>
-                    <td id="fin-total" class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-                </tr>
-            </table>
+        	<table id="results">
+        		<tr>
+        			<th></th>
+            		<th>Alap szerződés</th>
+            		<th>Módosításokkal</th>
+            		<th>Eltérés</th>
+            	</tr>
+        		<tr>
+        			<td>Törlesztéshez szükséges hónapok:</td>
+        			<td id="fin-full-months" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        			<td id="fin-months" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        			<td id="fin-diff-months" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        		</tr>
+        		<tr>
+        			<td>Kamatok és költségek:</td>
+        			<td id="fin-full-loss" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        			<td id="fin-loss" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        			<td id="fin-diff-loss" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        		</tr>
+        		<tr>
+        			<td>Egyéb kiadások:</td>
+        			<td id="fin-full-prepay" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        			<td id="fin-prepay" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        			<td id="fin-diff-prepay" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        		</tr>
+        		<tr>
+        			<td>Összesen fizetett:</td>
+        			<td id="fin-full-total" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        			<td id="fin-total" 			class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        			<td id="fin-diff-total" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        		</tr>
+        		<tr>
+        			<td>Valós THM:</td>
+        			<td id="fin-full-thm" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        			<td id="fin-thm" 			class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        			<td id="fin-diff-thm" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        		</tr>
+        		
+        	</table>
             <button type="button" onclick="calc();">Számol</button>
         </div>
 
