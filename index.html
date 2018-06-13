@@ -24,7 +24,7 @@
                 <tbody>
                     <tr>
                         <td><label>Hitel összege: </label></td>
-                        <td><input id="loan" class="money" type="text" placeholder="Hitel összege" value="18000000" onchange="calc();"></input> Ft</td>
+                        <td><input id="loan" class="money" type="text" placeholder="Hitel összege" value="31500000" onchange="calc();"></input> Ft</td>
                         <td></td>
                         <td rowspan="4" style="border-left:1px solid grey;padding-left:35px;     width: 27%;">Ebbe a részbe kerülnek a hitelkalkulátorból(bankmonitor, bankráció,...) kidobott értékek. <br/>Az "éves kamat" nem egyenlő a "THM"-mel.<br/>Ha nincs meg a kezdő törlesztőrészlet a "Törlesztő számítása" gomb segítségével kiszámolható egy optimális érték.</td>
                         <td rowspan="4" style="border-left:1px solid grey;padding-left:35px; text-align: left;">
@@ -35,33 +35,50 @@
 
                     <tr>
                         <td><label>Éves kamat: </label></td>
-                        <td><input id="rate" class="formatted-double" type="text" placeholder="Éves kamat" value="4,58" onchange="calc();"></input> %</td>
+                        <td><input id="rate" class="formatted-double" type="text" placeholder="Éves kamat" value="3,5" onchange="calc();"></input> %</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td><label>Futamidő: </label></td>
-                        <td><input id="run" class="formatted-integer" type="text" placeholder="Hitel összege" value="20" onchange="calc();"></input> Év</td>
+                        <td><input id="run" class="formatted-integer" type="text" placeholder="Hitel összege" value="25" onchange="calc();"></input> Év</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td><label>Törlesztő: </label></td>
-                        <td><input id="due" class="money" type="text" placeholder="Törlesztő" value="114680" onchange="calc();"></input> Ft</td>
+                        <td><input id="due" class="money" type="text" placeholder="Törlesztő" value="157697" onchange="calc();"></input> Ft</td>
                         <td style="padding-right:35px;"><button id="tolcalc" type="button" onclick="calcdue();">Törlesztő számítása</button></td>
+
+                    </tr>
+                    <tr>
+                        <td><label>Kezdő költségek: </label></td>
+                        <td><input id="startfee" class="money" type="text" placeholder="Kezdő költségek" value="0" onchange="calc();"></input> Ft</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td><label>Havi költségek: </label></td>
+                        <td><input id="mountlyfee" class="money" type="text" placeholder="Havi költségek" value="0" onchange="calc();"></input> Ft</td>
                     </tr>
                 </tbody>
             </table>
         </div>
 
         <div class="input-table">
-            <table>
+           Ebbe a részbe kerülnek az előtörlesztés(ek) adatai. A "Hozzáad" gombbal tetszőleges mennyiségű előtörlesztés lehetséges. Ha a kamat és a költség nincs kitöltve, 0-ás értékkel számol. Ha ugyanazal a hónappal törlesztő- és futamidőcsökkentés is van felvéve, akkor csak futamidőcsökkentés kerül érvényre (az összegek összeadódnak).
+          <br>Fundamenta: 50 	hónap Összeg: 1302559 Ft Ebből támogatás: 270769 Ft
+          <br>Fundamenta: 120 	hónap Összeg: 3135476 Ft Ebből támogatás: 659276 Ft
+          
+           <hr>
+        
+            <table width="100%">
                 <tr>
                     <td>
-                        <table id="pre-inputs" class="inputs pre-inputs">
+                        <table id="pre-inputs" class="inputs pre-inputs" width="100%">
                             <tr>
                                 <th style="white-space: nowrap;">Előtörlesztés hónapja</th>
                                 <th style="white-space: nowrap;">Előtörlesztés összege</th>
+                                <th style="white-space: nowrap;">Ebből (Állami)támogatás</th>
                                 <th style="white-space: nowrap;">Büntető kamat</th>
                                 <th style="white-space: nowrap;">Szerzősémódosítási költség</th>
                                 <th style="white-space: nowrap;">Mi csökkenjen?</th>
@@ -70,6 +87,7 @@
                             <tr>
                                 <td style="white-space: nowrap;"><input id="month-0" class="formatted-integer" type="text" placeholder="Hónap" onchange="calc();"></input></td>
                                 <td style="white-space: nowrap;"><input id="pre-add-0" class="money" type="text" placeholder="Összeg" onchange="calc();"></input> Ft</td>
+                                <td style="white-space: nowrap;"><input id="pre-aid-0" class="money" type="text" placeholder="Támogatás" onchange="calc();"></input> Ft</td>
                                 <td style="white-space: nowrap;"><input id="pre-rate-0" class="formatted-double" type="text" placeholder="Kamat" onchange="calc();"></input> %</td>
                                 <td style="white-space: nowrap;"><input id="pre-cost-0" class="money" type="text" placeholder="Költség" onchange="calc();"></input> Ft</td>
                                 <td style="white-space: nowrap;padding-right:35px;">
@@ -78,7 +96,6 @@
                             </tr>
                         </table>
                     </td>
-                    <td rowspan=2 style="border-left:1px solid grey;padding-left:35px;">Ebbe a részbe kerülnek az előtörlesztés(ek) adatai. <br/>A "Hozzáad" gombbal tetszőleges mennyiségű előtörlesztés lehetséges.<br/>Ha a kamat és a költség nincs kitöltve, 0-ás értékkel számol.<br/>Ha ugyanazal a hónappal törlesztő- és futamidőcsökkentés is van felvéve, akkor csak futamidőcsökkentés kerül érvényre (az összegek összeadódnak).</td>
                 </tr>
                 <tr>
                     <td align="right" style="margin-right:10px;padding-right:35px;">
@@ -115,10 +132,28 @@
         			<td id="fin-diff-prepay" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         		</tr>
         		<tr>
+        			<td>Előtörlesztésbe befektetés:</td>
+        			<td></td>
+        			<td id="fin-pluspay" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        			<td id="fin-diff-pluspay" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        		</tr>
+        		<tr>
+        			<td>(Állami) támogatások:</td>
+        			<td id="fin-full-aid" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        			<td id="fin-aid" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        			<td id="fin-diff-aid" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        		</tr>
+        		<tr>
         			<td>Összesen fizetett:</td>
         			<td id="fin-full-total" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         			<td id="fin-total" 			class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         			<td id="fin-diff-total" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
+        		</tr>
+        		<tr>
+        			<td>Összesen spórolt:</td>
+        			<td></td>
+        			<td></td>
+        			<td id="fin-saving" 	class="result-cell" style="white-space: nowrap;padding-right:35px;font-weight:bold;"></td>
         		</tr>
         		<tr>
         			<td>Valós THM:</td>
@@ -156,8 +191,8 @@
 
         <div id="copyright">
             <p><small>Az oldalon tájékoztató jellegű számításokat lehet végezni egy hitel futamidejére vonatkozólag tetszőleges számú előtörlesztéssel kalkulálva. Az eredmények tájékoztató jellegűek, bármely bank valós hitelen végzett számításai ettől eltérhetnek. A szerző nem vállal felelősséget az eltérésekért és az esetleges számítási pontatlanságokért.</small></p>
-            <p><small>Copyright &copy; by Gabo. Minden jog fenntartva.</small><br/><small>A kalkulációs adatok mentése/betöltése modulért köszönet Kukel Attilának.</small></p>
-            <p><small>Kérdés vagy észrevétel esetén <a href="mailto:freemanowe@citromail.hu">írjon</a>.</small></p>
+            <p><small>Copyright &copy; by Csaba504. Minden jog fenntartva.</small><br/><small>A kalkulációs oldal alapjaiért köszönet Gabonak.</small><br><small>A kalkulációs adatok mentése/betöltése modulért köszönet Kukel Attilának.</small></p>
+            <p><small>Kérdés vagy észrevétel esetén írjon <a href="mailto:csaba504@gmail.com">Csaba504</a> <a href="mailto:freemanowe@citromail.hu">Gabo</a>.</small></p>
         </div>
     </body>
 </html>

@@ -211,19 +211,22 @@ function calc() {
     var kamat = getNumVal($('#rate')) / 1200.0;
     var remain = getNumVal($('#loan'));
     var torleszto = getNumVal($('#due'));
-    var i, j, prev, kamattorl, toketorl, loss = 0, lloss, min;
+    var i, j, prev, kamattorl, toketorl, loss = 0, lloss, min, totalAid = 0, pluspay = 0;
     tableinstance.clear();
     diagramdata = [];
     diagramdata_year = [];
     tabledata = [];
     var elotorl = new Array();
     var temp = new Array();
-
+    var otherLoss 		= getNumVal($('#startfee'));
+    var otherLossTotal 	= getNumVal($('#startfee'));
     
     // read elotorlesztesek
     for(j = 0; j < prefieldnum; j++) {
         var month = getNumVal($('#month-' + j));
         var add = getNumVal($('#pre-add-' + j));
+        var aid = getNumVal($('#pre-aid-' + j));
+        var addfull = getNumVal($('#pre-add-' + j));
         var rate = getNumVal($('#pre-rate-' + j)) / 100;
         var cost = getNumVal($('#pre-cost-' + j));
         var mode = parseInt($('input[name=pre-mode-' + j + ']:checked').val());
@@ -236,30 +239,39 @@ function calc() {
         else {
             lloss = cost + Math.round(add * rate);
         }
-        if(month > 0 && add > 0) temp.push([month, add, lloss, mode]);
-    }
-    for(i = 0; i < temp.length; i++) {
-        prev = 0;
-        min = futamido + 10;
-        for(j = 0; j < temp.length; j++) {
-            if(temp[j][0] < min) {
-                min = temp[j][0];
-                prev = j;
-            }
-            else if(temp[j][0] == min) {
-                temp[prev][0] = futamido + 10;
-                temp[j][1] = temp[j][1] + temp[prev][1];
-                temp[j][2] = temp[j][2] + temp[prev][2];
-                temp[j][3] = temp[j][3] | temp[prev][3];
-                prev = j;
-            }
+        if(month > 0 && add > 0){
+        	elotorl.push([month, add, lloss, mode, aid, addfull]);
         }
-        elotorl.push([temp[prev][0], temp[prev][1], temp[prev][2], temp[prev][3]]);
-        temp[prev][0] = futamido + 10;
     }
+
     
     ///Generate without prepayment
     
+    var woRemain = remain;
+    var woLoss = 0;
+    for(woHonap = 1; woHonap <= futamido && woRemain >= 0; woHonap++) {
+
+
+        prev = woRemain;
+        kamattorl = Math.round(woRemain * kamat);
+        toketorl = torleszto - kamattorl;
+        woRemain = woRemain - toketorl;
+        woLoss = woLoss + kamattorl;
+        otherLoss += getNumVal($('#mountlyfee'));
+        /*if(woRemain < 0) {
+        	woRemain = 0;
+            toketorl = prev;
+            torleszto = toketorl + kamattorl;
+        }*/
+        //mar_befizetett = mar_befizetett + toketorl;
+
+
+    }
+    $('#fin-full-months').html((woHonap - 1) + ' (' + parseInt((woHonap - 1)/12) + ' év ' + ((woHonap - 1)%12) + ' hónap)');
+    $('#fin-full-loss').html(convert2Money2(woLoss) + ' Ft');
+    $('#fin-full-total').html(convert2Money2(woLoss + getNumVal($('#loan'))) + ' Ft');
+    $('#fin-full-prepay').html(convert2Money2(otherLoss) + ' Ft');
+
     
     
     ///Generate data
@@ -274,11 +286,19 @@ function calc() {
 
             if(honap == month) {
                 var add = elotorl[j][1];
+                var addfull = elotorl[j][5];
                 var lloss = elotorl[j][2];
                 var mode = elotorl[j][3];
+                var aid = elotorl[j][4];
 
+                pluspay += addfull - aid;
+                totalAid += aid;
+                otherLossTotal += lloss;
                 loss = loss + lloss;
                 remain = remain - add;
+                if (remain < 0){
+                	remain = 0;
+                }
                 mar_befizetett = mar_befizetett + add;
                 if(mode == 0){
                 	torleszto = torlesztoszamitas(remain,kamat,new_futamido);
@@ -295,6 +315,8 @@ function calc() {
         toketorl = torleszto - kamattorl;
         remain = remain - toketorl;
         loss = loss + kamattorl;
+        otherLossTotal += getNumVal($('#mountlyfee'));
+
         if(remain < 0) {
             remain = 0;
             toketorl = prev;
@@ -313,7 +335,26 @@ function calc() {
     $('#fin-months').html((honap - 1) + ' (' + parseInt((honap - 1)/12) + ' év ' + ((honap - 1)%12) + ' hónap)');
     $('#fin-loss').html(convert2Money2(loss) + ' Ft');
     $('#fin-total').html(convert2Money2(loss + getNumVal($('#loan'))) + ' Ft');
+    $('#fin-prepay').html(convert2Money2(otherLossTotal) + ' Ft');
+    $('#fin-aid').html(convert2Money2(totalAid) + ' Ft');
+    $('#fin-pluspay').html(convert2Money2(pluspay) + ' Ft');
 
+    
+    $('#fin-diff-months').html((woHonap - honap) + ' (' + parseInt((woHonap - honap)/12) + ' év ' + ((woHonap - honap)%12) + ' hónap)');
+    $('#fin-diff-loss').html(convert2Money2(woLoss-loss) + ' Ft');
+    $('#fin-diff-total').html(convert2Money2(woLoss-loss) + ' Ft');
+    $('#fin-diff-prepay').html(convert2Money2(otherLossTotal - otherLoss) + ' Ft');
+    $('#fin-diff-aid').html(convert2Money2(totalAid) + ' Ft');
+    $('#fin-diff-pluspay').html(convert2Money2(pluspay) + ' Ft');
+
+    
+    
+    
+    
+    $('#fin-saving').html(convert2Money2(woLoss-loss - (+otherLossTotal - otherLoss) + totalAid) + ' Ft');
+
+    
+    
     if(tableinstance) {
         tableinstance.rows.add(tabledata).draw();
     }
@@ -373,11 +414,14 @@ function drawBasic() {
 var prefieldnum = 1;
 
 function addPreFields() {
-    var tmp = '<tr><td><input id="month-' + prefieldnum + '" class="formatted-integer" type="text" placeholder="Hónap" onchange="calc();"></input></td><td><input id="pre-add-' + prefieldnum + '" class="money" type="text" placeholder="Összeg" onchange="calc();"></input> Ft</td><td><input id="pre-rate-' + prefieldnum + '" class="formatted-double" type="text" placeholder="Kamat" onchange="calc();"></input> %</td><td><input id="pre-cost-' + prefieldnum + '" class="money" type="text" placeholder="Költség" onchange="calc();"></input> Ft</td><td>- Törlesztő<input name="pre-mode-' + prefieldnum + '" type="radio" value="0" onchange="calc();disablecost(' + prefieldnum + ');"></input><input name="pre-mode-' + prefieldnum + '" type="radio" value="1" onchange="calc();disablecost(' + prefieldnum + ');" checked="true"></input>Futamidő -</td></tr>';
+    var tmp = '<tr><td><input id="month-' + prefieldnum + '" class="formatted-integer" type="text" placeholder="Hónap" onchange="calc();"></input></td><td><input id="pre-add-' + prefieldnum + '" class="money" type="text" placeholder="Összeg" onchange="calc();"></input> Ft</td><td><input id="pre-aid-' + prefieldnum + '" class="money" type="text" placeholder="Támogatás" onchange="calc();"></input> Ft</td><td><input id="pre-rate-' + prefieldnum + '" class="formatted-double" type="text" placeholder="Kamat" onchange="calc();"></input> %</td><td><input id="pre-cost-' + prefieldnum + '" class="money" type="text" placeholder="Költség" onchange="calc();"></input> Ft</td><td>- Törlesztő<input name="pre-mode-' + prefieldnum + '" type="radio" value="0" onchange="calc();disablecost(' + prefieldnum + ');"></input><input name="pre-mode-' + prefieldnum + '" type="radio" value="1" onchange="calc();disablecost(' + prefieldnum + ');" checked="true"></input>Futamidő -</td></tr>';
     $('#pre-inputs').append(tmp);
 
     $("#pre-add-" + prefieldnum).on("input", function(event) {
         $(this).val(procNumberInput($(this).val(),true,true,1,2));
+    });
+    $("#pre-aid-" + prefieldnum).on("input", function(event) {
+    	$(this).val(procNumberInput($(this).val(),true,true,1,2));
     });
     $("#pre-cost-" + prefieldnum).on("input", function(event) {
         $(this).val(procNumberInput($(this).val(),true,true,1,2));
@@ -402,6 +446,8 @@ function data_load() {
         $("#rate").val(data_from_storage.rate);
         $("#run").val(data_from_storage.run);
         $("#due").val(data_from_storage.due);
+        $("#startfee").val(data_from_storage.startfee);
+        $("#mountlyfee").val(data_from_storage.mountlyfee);
         if (data_from_storage.pre.key_count) {
             for (i = 1; i < data_from_storage.pre.key_count; i++) {
                 addPreFields();
@@ -409,6 +455,7 @@ function data_load() {
             for (i = 0; i <= data_from_storage.pre.key_count; i++) {
                 $("#month-" + i).val(data_from_storage.pre.month[i]);
                 $("#pre-add-" + i).val(data_from_storage.pre.pre_add[i]);
+                $("#pre-aid-" + i).val(data_from_storage.pre.pre_aid[i]);
                 $("#pre-rate-" + i).val(data_from_storage.pre.pre_rate[i]);
                 $("#pre-cost-" + i).val(data_from_storage.pre.pre_cost[i]);
                 $("input[name=pre-mode-" + i + "][value=" + data_from_storage.pre.pre_mode[i] + "]").click();
@@ -421,6 +468,7 @@ function data_load() {
 
 var month = new Array();
 var pre_add = new Array();
+var pre_aid = new Array();
 var pre_rate = new Array();
 var pre_cost = new Array();
 var pre_mode = new Array();
@@ -432,6 +480,7 @@ function data_save() {
         }
         month[key - 1] = $(value).find("td input#month-" + (key - 1) + "").val();
         pre_add[key - 1] = $(value).find("td input#pre-add-" + (key - 1) + "").val();
+        pre_aid[key - 1] = $(value).find("td input#pre-aid-" + (key - 1) + "").val();
         pre_rate[key - 1] = $(value).find("td input#pre-rate-" + (key - 1) + "").val();
         pre_cost[key - 1] = $(value).find("td input#pre-cost-" + (key - 1) + "").val();
         pre_mode[key - 1] = $(value).find("td input[name=pre-mode-" + (key - 1) + "]:checked").val();
@@ -442,9 +491,12 @@ function data_save() {
         rate: $("#rate").val(),
         run: $("#run").val(),
         due: $("#due").val(),
+        startfee: $("#startfee").val(),
+        mountlyfee: $("#mountlyfee").val(),
         pre: {
             month: month,
             pre_add: pre_add,
+            pre_aid: pre_aid,
             pre_rate: pre_rate,
             pre_cost: pre_cost,
             pre_mode: pre_mode,
