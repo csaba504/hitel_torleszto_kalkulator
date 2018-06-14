@@ -80,7 +80,7 @@
                                 <th style="white-space: nowrap;">Előtörlesztés összege</th>
                                 <th style="white-space: nowrap;">Ebből (Állami)támogatás</th>
                                 <th style="white-space: nowrap;">Büntető kamat</th>
-                                <th style="white-space: nowrap;">Szerzősémódosítási költség</th>
+                                <th style="white-space: nowrap;">Szerződésmódosítási költség</th>
                                 <th style="white-space: nowrap;">Mi csökkenjen?</th>
                             </tr>
 
@@ -98,8 +98,40 @@
                     </td>
                 </tr>
                 <tr>
-                    <td align="right" style="margin-right:10px;padding-right:35px;">
+                    <td align="left" style="margin-right:10px;padding-right:35px;">
                         <button type="button" onclick="addPreFields();">Hozzáad</button>
+                    <td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="input-table">
+           Ebbe a részbe kerülnek a kamatláb változássok. A "Hozzáad" gombbal tetszőleges mennyiségű illeszthető be.
+           <hr>
+        
+            <table width="100%">
+                <tr>
+                    <td>
+                        <table id="interest-inputs" class="inputs interest-inputs">
+                            <tr>
+                                <th style="white-space: nowrap;">Változás hónapja</th>
+                                <th style="white-space: nowrap;">Új kamatláb</th>
+                                <th style="white-space: nowrap;">Mi változzon?</th>
+                            </tr>
+
+                            <tr>
+                                <td style="white-space: nowrap;"><input id="interest-month-0" class="formatted-integer" type="text" placeholder="Hónap" onchange="calc();"></input></td>
+                                <td style="white-space: nowrap;"><input id="interest-rate-0" class="money" type="text" placeholder="Új kamatláb" onchange="calc();"></input>%</td>
+                                <td style="white-space: nowrap;padding-right:35px;">
+                                    - Törlesztő<input name="interest-mode-0" type="radio" value="0" onchange="calc();"  checked="true"></input><input name="interest-mode-0" type="radio" value="1" onchange="calc();"></input>Futamidő -
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td align="left" style="margin-right:10px;padding-right:35px;">
+                        <button type="button" onclick="addInterestFields();">Hozzáad</button>
                     <td>
                 </tr>
             </table>
@@ -176,7 +208,8 @@
                         <th width="4%">Hónap</th>
                         <th width="16%">Hó eleji egyenleg</th>
                         <th width="16%">Törlesztő</th>
-                        <th width="16%">Kamat</th>
+                        <th width="16%">Kamat láb</th>
+                        <th width="16%">Kamat Ft</th>
                         <th width="16%">Tőke</th>
                         <th width="16%">Akt. hó végéig fizetett</th>
                         <th width="16%">Hó végi egyenleg</th>

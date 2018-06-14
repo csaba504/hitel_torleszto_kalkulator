@@ -20,7 +20,9 @@ input {
     width: 1024px;
     overflow: auto;
 }
-
+table.dataTable tbody td {
+    white-space: nowrap;
+}
 .inputs {
     margin-bottom: 20px;
 }
