@@ -210,6 +210,7 @@ function calc() {
     var mar_befizetett = 0;
     var kamat = getNumVal($('#rate')) / 1200.0;
     var remain = getNumVal($('#loan'));
+    var startLoan = getNumVal($('#loan'));
     var torleszto = getNumVal($('#due'));
     var i, j, prev, kamattorl, toketorl, loss = 0, lloss, min, totalAid = 0, pluspay = 0;
     tableinstance.clear();
@@ -267,12 +268,14 @@ function calc() {
 
 
     }
+    
+    var startFullPayable = woLoss + startLoan + otherLoss;
     $('#fin-full-months').html((woHonap - 1) + ' (' + parseInt((woHonap - 1)/12) + ' év ' + ((woHonap - 1)%12) + ' hónap)');
     $('#fin-full-loss').html(convert2Money2(woLoss) + ' Ft');
-    $('#fin-full-total').html(convert2Money2(woLoss + getNumVal($('#loan'))) + ' Ft');
+    $('#fin-full-total').html(convert2Money2(startFullPayable) + ' Ft');
     $('#fin-full-prepay').html(convert2Money2(otherLoss) + ' Ft');
-
-    
+    var startThm = thmCalculator(startLoan, startFullPayable, woHonap - 1);
+    $('#fin-full-thm').html(startThm + '%');
     
     ///Generate data
     
@@ -332,21 +335,24 @@ function calc() {
         new_futamido--;
     }
     
+    
+    var newFullPayable = loss + startLoan + otherLossTotal;
     $('#fin-months').html((honap - 1) + ' (' + parseInt((honap - 1)/12) + ' év ' + ((honap - 1)%12) + ' hónap)');
     $('#fin-loss').html(convert2Money2(loss) + ' Ft');
-    $('#fin-total').html(convert2Money2(loss + getNumVal($('#loan'))) + ' Ft');
+    $('#fin-total').html(convert2Money2(newFullPayable) + ' Ft');
     $('#fin-prepay').html(convert2Money2(otherLossTotal) + ' Ft');
     $('#fin-aid').html(convert2Money2(totalAid) + ' Ft');
     $('#fin-pluspay').html(convert2Money2(pluspay) + ' Ft');
-
+    var newThm = thmCalculator(startLoan, newFullPayable, honap - 1);
+    $('#fin-thm').html(newThm + '%');
     
     $('#fin-diff-months').html((woHonap - honap) + ' (' + parseInt((woHonap - honap)/12) + ' év ' + ((woHonap - honap)%12) + ' hónap)');
     $('#fin-diff-loss').html(convert2Money2(woLoss-loss) + ' Ft');
-    $('#fin-diff-total').html(convert2Money2(woLoss-loss) + ' Ft');
+    $('#fin-diff-total').html(convert2Money2( startFullPayable - newFullPayable) + ' Ft');
     $('#fin-diff-prepay').html(convert2Money2(otherLossTotal - otherLoss) + ' Ft');
     $('#fin-diff-aid').html(convert2Money2(totalAid) + ' Ft');
     $('#fin-diff-pluspay').html(convert2Money2(pluspay) + ' Ft');
-
+    $('#fin-diff-thm').html(Math.round((startThm - newThm) * 1000) / 1000 + '%');
     
     
     
@@ -359,6 +365,22 @@ function calc() {
         tableinstance.rows.add(tabledata).draw();
     }
     drawBasic();
+}
+
+function thmCalculator(startPrice, fullPrice, duration){
+	/*startPrice = 10000000;
+	fullPrice = 17194152;
+	duration  = 240;*/
+	monthly = fullPrice / duration;
+	
+	r = 0.000001;
+	calcPrice = startPrice + 1;
+	while (startPrice < calcPrice){
+		r = r + 0.000001;
+		calcPrice = monthly * ( (1/r) - (1/  (r * (Math.pow((1+r), duration)))   )     );
+	}
+	thm = r * 12 * 100;
+	return Math.round(thm * 1000) / 1000;
 }
 
 function futamidoszamitas(remain,kamat,torleszto,new_futamido) {
