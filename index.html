@@ -24,7 +24,7 @@
                 <tbody>
                     <tr>
                         <td><label>Hitel összege: </label></td>
-                        <td><input id="loan" class="money" type="text" placeholder="Hitel összege" value="31500000" onchange="calc();"></input> Ft</td>
+                        <td><input id="loan" class="money" type="text" placeholder="Hitel összege" value="10000000" onchange="calc();"></input> Ft</td>
                         <td></td>
                         <td rowspan="4" style="border-left:1px solid grey;padding-left:35px;     width: 27%;">Ebbe a részbe kerülnek a hitelkalkulátorból(bankmonitor, bankráció,...) kidobott értékek. <br/>Az "éves kamat" nem egyenlő a "THM"-mel.<br/>Ha nincs meg a kezdő törlesztőrészlet a "Törlesztő számítása" gomb segítségével kiszámolható egy optimális érték.</td>
                         <td rowspan="4" style="border-left:1px solid grey;padding-left:35px; text-align: left;">
@@ -41,13 +41,13 @@
 
                     <tr>
                         <td><label>Futamidő: </label></td>
-                        <td><input id="run" class="formatted-integer" type="text" placeholder="Hitel összege" value="25" onchange="calc();"></input> Év</td>
+                        <td><input id="run" class="formatted-integer" type="text" placeholder="Hitel összege" value="15" onchange="calc();"></input> Év</td>
                         <td></td>
                     </tr>
 
                     <tr>
                         <td><label>Törlesztő: </label></td>
-                        <td><input id="due" class="money" type="text" placeholder="Törlesztő" value="157697" onchange="calc();"></input> Ft</td>
+                        <td><input id="due" class="money" type="text" placeholder="Törlesztő" value="71489" onchange="calc();"></input> Ft</td>
                         <td style="padding-right:35px;"><button id="tolcalc" type="button" onclick="calcdue();">Törlesztő számítása</button></td>
 
                     </tr>
@@ -65,9 +65,9 @@
         </div>
 
         <div class="input-table">
-           Ebbe a részbe kerülnek az előtörlesztés(ek) adatai. A "Hozzáad" gombbal tetszőleges mennyiségű előtörlesztés lehetséges. Ha a kamat és a költség nincs kitöltve, 0-ás értékkel számol. Ha ugyanazal a hónappal törlesztő- és futamidőcsökkentés is van felvéve, akkor csak futamidőcsökkentés kerül érvényre (az összegek összeadódnak).
-          <br>Fundamenta: 50 	hónap Összeg: 1302559 Ft Ebből támogatás: 270769 Ft
-          <br>Fundamenta: 120 	hónap Összeg: 3135476 Ft Ebből támogatás: 659276 Ft
+           Ebbe a részbe kerülnek az előtörlesztés(ek) adatai. A "Hozzáad" gombbal tetszőleges mennyiségű előtörlesztés lehetséges. Ha a kamat és a költség nincs kitöltve, 0-ás értékkel számol.
+          <br>Fundamenta: 50 	hónap &nbsp; Összeg: 1 302 559 Ft Ebből támogatás: 270 769 Ft <a target="_blank" href="https://partner.fundamenta.hu/web/guest/online-kotes?tarifa=A20&haviRata=20000&szerzOssz=0" class="tooltip">?<span class="tooltiptext">Támogatás:<br> Állami támogatás +<br> Betéti kamat támogatás és befizetés után -<br> Számlanyitási díj</span></a>
+          <br>Fundamenta: 120 	hónap Összeg: 3 135 476 Ft Ebből támogatás: 659 276 Ft <a target="_blank" href="https://partner.fundamenta.hu/web/guest/online-kotes" class="tooltip">?<span class="tooltiptext">Támogatás:<br> Állami támogatás +<br> Betéti kamat támogatás és befizetés után -<br> Számlanyitási díj</span></a>
           
            <hr>
         
@@ -79,7 +79,7 @@
                                 <th style="white-space: nowrap;">Előtörlesztés hónapja</th>
                                 <th style="white-space: nowrap;">Előtörlesztés összege</th>
                                 <th style="white-space: nowrap;">Ebből (Állami)támogatás</th>
-                                <th style="white-space: nowrap;">Büntető kamat</th>
+                                <th style="white-space: nowrap;">Előtörlesztési díj</th>
                                 <th style="white-space: nowrap;">Szerződésmódosítási költség</th>
                                 <th style="white-space: nowrap;">Mi csökkenjen?</th>
                             </tr>
@@ -106,7 +106,7 @@
         </div>
 
         <div class="input-table">
-           Ebbe a részbe kerülnek a kamatláb változássok. A "Hozzáad" gombbal tetszőleges mennyiségű illeszthető be.
+           Ebbe a részbe kerülnek a kamatláb változások. A "Hozzáad" gombbal tetszőleges mennyiségű illeszthető be.
            <hr>
         
             <table width="100%">
@@ -133,13 +133,18 @@
                     <td align="left" style="margin-right:10px;padding-right:35px;">
                         <button type="button" onclick="addInterestFields();">Hozzáad</button>
                         <button type="button" onclick="resetInterestFields();calc();">Törlés</button>
-                        <button type="button" onclick="addInterest(3, 2.3);calc();">3 havi kamatperiodus</button>
-                        <button type="button" onclick="addInterest(6, 2.2);calc();">6 havi kamatperiodus</button>
-                        <button type="button" onclick="addInterest(12, 2.7);calc();">1 éves kamatperiodus</button>
-                        <button type="button" onclick="addInterest(36, 3.2);calc();">3 éves kamatperiodus</button>
-                        <button type="button" onclick="addInterest(60, 3.35);calc();">5 éves kamatperiodus</button>
-                        <button type="button" onclick="addInterest(120, 4.64);calc();">10 éves kamatperiodus</button>
-                        <button type="button" onclick="addInterest(240, 5);calc();">20 éves kamatperiodus</button>
+                        <button type="button" onclick="addInterest(3, 2.3);calc();">3 havi kamatperiódus</button>
+                        <button type="button" onclick="addInterest(6, 2.2);calc();">6 havi kamatperiódus</button>
+                        <button type="button" onclick="addInterest(12, 2.7);calc();">1 éves kamatperiódus</button>
+                        <button type="button" onclick="addInterest(36, 3.2);calc();">3 éves kamatperiódus</button>
+                        <button type="button" onclick="addInterest(60, 3.35);calc();">5 éves kamatperiódus</button>
+                        <button type="button" onclick="addInterest(120, 4.64);calc();">10 éves kamatperiódus</button>
+                        <button type="button" onclick="addInterest(240, 5);calc();">20 éves kamatperiódus</button>
+                    <td>
+                </tr>
+                <tr>
+                    <td align="left">
+                        A kamatperiódusok a bankok átlagos kamatlábát veszik alapul időben visszafele.
                     <td>
                 </tr>
             </table>
@@ -154,43 +159,43 @@
             		<th>Eltérés</th>
             	</tr>
         		<tr>
-        			<td>Törlesztéshez szükséges hónapok:</td>
+        			<td>Törlesztéshez szükséges hónapok:<div class="tooltip" tooltip="">?<span class="tooltiptext">Amíg a tőke teljesen visszatörlesztésre kerül.</span></div></td>
         			<td id="fin-full-months" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         			<td id="fin-months" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         			<td id="fin-diff-months" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         		</tr>
         		<tr>
-        			<td>Kamatok és költségek:</td>
+        			<td>Kamatok és költségek:<div class="tooltip">?<span class="tooltiptext">Felvett hitel + minden kiadás.</span></div></td>
         			<td id="fin-full-loss" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         			<td id="fin-loss" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         			<td id="fin-diff-loss" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         		</tr>
         		<tr>
-        			<td>Egyéb kiadások:</td>
+        			<td>Egyéb kiadások:<div class="tooltip">?<span class="tooltiptext"><i>Minden ami nem a tőketörlesztés</i><br>Kezdő költség +<br>Havi költségek +<br>Előtörlesztések összege</span></div></td>
         			<td id="fin-full-prepay" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         			<td id="fin-prepay" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         			<td id="fin-diff-prepay" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         		</tr>
         		<tr>
-        			<td>Előtörlesztésbe befektetés:</td>
+        			<td>Előtörlesztésbe befektetés: <div class="tooltip" tooltip="">?<span class="tooltiptext">Az összes előtörlesztés összege a futamidő alatt.</span></div></td>
         			<td></td>
         			<td id="fin-pluspay" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         			<td id="fin-diff-pluspay" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         		</tr>
         		<tr>
-        			<td>(Állami) támogatások:</td>
+        			<td>(Állami) támogatások: <div class="tooltip" tooltip="">?<span class="tooltiptext">Igénybe vett (állami)támogatás<br> a futamidő alatt.</span></div></td>
         			<td id="fin-full-aid" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         			<td id="fin-aid" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         			<td id="fin-diff-aid" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         		</tr>
         		<tr>
-        			<td>Összesen fizetett:</td>
+        			<td>Összesen fizetett: <div class="tooltip" tooltip="">?<span class="tooltiptext">Felvett hitel +<br>Kezdő költségek +<br>Havi költségek +<br>Előtörlesztések díja</span></div></td>
         			<td id="fin-full-total" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         			<td id="fin-total" 			class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         			<td id="fin-diff-total" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
         		</tr>
         		<tr>
-        			<td>Összesen spórolt:</td>
+        			<td>Összesen spórolt:<div class="tooltip" tooltip="">?<span class="tooltiptext">Alap szerződés Összesen fizetett -<br> Módosításokkal összesen fizetett -<br> (Állami) támogatások</span></div></td>
         			<td></td>
         			<td></td>
         			<td id="fin-saving" 	class="result-cell" style="white-space: nowrap;padding-right:35px;font-weight:bold;"></td>
@@ -216,7 +221,7 @@
                         <th width="4%">Hónap</th>
                         <th width="16%">Hó eleji egyenleg</th>
                         <th width="16%">Törlesztő</th>
-                        <th width="16%">Kamat láb</th>
+                        <th width="16%">Kamat láb %</th>
                         <th width="16%">Kamat Ft</th>
                         <th width="16%">Tőke</th>
                         <th width="16%">Akt. hó végéig fizetett</th>

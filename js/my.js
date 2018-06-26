@@ -283,7 +283,7 @@ function calc() {
     diagramdata.push([0,remain]);
     diagramdata_year.push([0,remain]);
     
-    for(honap = 1; remain > 0; honap++) {
+    for(honap = 1; remain > 0 && honap <= 1000; honap++) {
         for(j = 0; j < interestList.length; j++) {
             var month = interestList[j][0];
 
