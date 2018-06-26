@@ -222,6 +222,8 @@ function calc() {
     var temp = new Array();
     var otherLoss 		= getNumVal($('#startfee'));
     var otherLossTotal 	= getNumVal($('#startfee'));
+    var max_months_pay = 0;
+    
     
     // read elotorlesztesek
     for(j = 0; j < prefieldnum; j++) {
@@ -276,6 +278,10 @@ function calc() {
     $('#fin-full-prepay').html(convert2Money2(otherLoss) + ' Ft');
     var startThm = thmCalculator(startLoan, startFullPayable, woHonap - 1);
     $('#fin-full-thm').html(startThm + '%');
+    $('#fin-full-months-pay').html(convert2Money2(torleszto + getNumVal($('#mountlyfee')))+ ' Ft');
+    $('#fin-full-plus').html(convert2Money2(woLoss + otherLoss)+ ' Ft');
+    
+    
     
     ///Generate data
     
@@ -344,6 +350,8 @@ function calc() {
             torleszto = toketorl + kamattorl;
         }
         mar_befizetett = mar_befizetett + toketorl;
+        if (max_months_pay < torleszto)
+        	max_months_pay = torleszto;
 
         tabledata.push([honap, convert2Money2(prev), convert2Money2(torleszto),Math.round(kamat*1200 * 100)/100 , convert2Money2(kamattorl), convert2Money2(toketorl), convert2Money2(mar_befizetett + loss), convert2Money2(remain)]);
         diagramdata.push([honap,remain]);
@@ -363,6 +371,11 @@ function calc() {
     $('#fin-pluspay').html(convert2Money2(pluspay) + ' Ft');
     var newThm = thmCalculator(startLoan, newFullPayable, honap - 1);
     $('#fin-thm').html(newThm + '%');
+    $('#fin-months-pay').html(convert2Money2(max_months_pay + getNumVal($('#mountlyfee')))+' Ft');
+    $('#fin-plus').html(convert2Money2(loss + otherLossTotal - totalAid)+ ' Ft');
+
+    
+    
     
     $('#fin-diff-months').html((woHonap - honap) + ' (' + parseInt((woHonap - honap)/12) + ' év ' + ((woHonap - honap)%12) + ' hónap)');
     $('#fin-diff-loss').html(convert2Money2(woLoss-loss) + ' Ft');
@@ -371,7 +384,8 @@ function calc() {
     $('#fin-diff-aid').html(convert2Money2(totalAid) + ' Ft');
     $('#fin-diff-pluspay').html(convert2Money2(pluspay) + ' Ft');
     $('#fin-diff-thm').html(Math.round((startThm - newThm) * 1000) / 1000 + '%');
-    
+    $('#fin-diff-months-pay').html(convert2Money2(getNumVal($('#due')) - max_months_pay) +  ' Ft');
+    $('#fin-diff-plus').html(convert2Money2(    (loss + otherLossTotal - totalAid) - (woLoss + otherLoss)) +  ' Ft');
     
     
     
