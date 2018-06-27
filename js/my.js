@@ -64,7 +64,13 @@ $(function() {
 });
 
 
-function procNumberInput(value, real = true, signed = true, precision = 9, padTo = 3, forcePad = false) {
+function procNumberInput(value, real, signed, precision, padTo, forcePad) {
+	real = typeof real !== 'undefined' ? real : true;
+	signed = typeof signed !== 'undefined' ? signed : true;
+	precision = typeof precision !== 'undefined' ? precision : 9;
+	padTo = typeof padTo !== 'undefined' ? padTo : 3;
+	forcePad = typeof forcePad !== 'undefined' ? forcePad : false;
+	
     var thousandsSeparator = ' ';
     var radix = ',';
     var altradix = '.';
@@ -167,7 +173,9 @@ function convert2Money2(input) {
     return procNumberInput(input,true,true,2,2,true);
 }
 
-function convert2precision(input,precision = 1,length = 1) {
+function convert2precision(input,precision,length) {
+	precision = typeof precision !== 'undefined' ? precision : 1;
+	length = typeof length !== 'undefined' ? length : 1;
     return procNumberInput(input,true,true,precision,length,true);
 }
 
@@ -401,10 +409,16 @@ function calc() {
 
 
 function thmCalculator(startPrice, fullPrice, duration){
-	var stored = localStorage["thm" + startPrice + " " +fullPrice + " " + duration];
-	if (stored){ 
-		return stored;
-	}
+	//XXX: ie bug :S
+	try{
+		if (typeof a !== 'undefined')
+		{
+			var stored = window.localStorage["thm" + startPrice + " " +fullPrice + " " + duration];
+			if (stored){ 
+				return stored;
+			}
+		}
+	}catch(err){};
 	
 	monthly = fullPrice / duration;
 	
@@ -415,7 +429,10 @@ function thmCalculator(startPrice, fullPrice, duration){
 		calcPrice = monthly * ( (1/r) - (1/  (r * (Math.pow((1+r), duration)))   )     );
 	}
 	thm = Math.round(r * 12 * 100 * 1000) / 1000; 
-	localStorage["thm" + startPrice + " " +fullPrice + " " + duration] = thm;
+	if (typeof a !== 'undefined')
+	{
+		window.localStorage["thm" + startPrice + " " +fullPrice + " " + duration] = thm;
+	}
 	return thm;
 }
 
