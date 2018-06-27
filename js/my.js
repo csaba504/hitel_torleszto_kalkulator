@@ -1,8 +1,10 @@
-/* All rights reserved to Gabo <freemanowe@citromail.hu>. Content free to copy for non-commercial use only. */
+/* All rights reserved to Csaba504 <csaba504@gmail.com>. Content free to copy for non-commercial use only. 
+ * The code was a legacy code. I just expanded it!
+ * 
+ * */
 var tableinstance;
 
 $(function() {
-    // from Attila
     $("#data_export").click(data_export);
     document.getElementById('data_import').addEventListener('change', data_import, false);
 
@@ -210,7 +212,6 @@ var diagramdata = new Array();
 var diagramdata_year = new Array();
 var tabledata = new Array();
 
-// szamolo
 function calc() {
 	//// Default setup
     var futamido = getNumVal($('#run')) * 12.0;

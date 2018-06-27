@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Hitel Törlesztő Kalkulátor / Tervező</title>
+        <title>Hitel Törlesztő Kalkulátor / Tervező V1.0.0</title>
 
         <link rel="stylesheet" href="datatables/css/jquery.dataTables.min.css">
         <link rel="stylesheet" href="datatables/css/buttons.dataTables.min.css">
@@ -17,6 +17,15 @@
         <script src="datatables/js/pdfmake.min.js"></script>
         <script src="datatables/js/vfs_fonts.js"></script>
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <!-- Global site tag (gtag.js) - Google Analytics -->
+		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-74718697-4"></script>
+		<script>
+		  window.dataLayer = window.dataLayer || [];
+		  function gtag(){dataLayer.push(arguments);}
+		  gtag('js', new Date());
+		
+		  gtag('config', 'UA-74718697-4');
+		</script>
     </head>
     <body>
         <div class="input-table">
@@ -91,7 +100,7 @@
                                 <td style="white-space: nowrap;"><input id="pre-rate-0" class="formatted-double" type="text" placeholder="Kamat" onchange="calc();"></input> %</td>
                                 <td style="white-space: nowrap;"><input id="pre-cost-0" class="money" type="text" placeholder="Költség" onchange="calc();"></input> Ft</td>
                                 <td style="white-space: nowrap;padding-right:35px;">
-                                    - Törlesztő<input name="pre-mode-0" type="radio" value="0" onchange="calc();disablecost(0);"></input><input name="pre-mode-0" type="radio" value="1" onchange="calc();disablecost(0);" checked="true"></input>Futamidő -
+                                   <div class="tooltip">?<span class="tooltiptext">A bankok alapértelmezetten a<br> <b>Törlesztőt</b> csökkentik!<hr>A Futamidő csökkentése általában esetenként:<br> +30.000 Ft <br>+ 1% közjegyzői díj <br>+ előtörlesztési díj</span></div> - Törlesztő<input name="pre-mode-0" type="radio" value="0" onchange="calc();disablecost(0);"></input><input name="pre-mode-0" type="radio" value="1" onchange="calc();disablecost(0);" checked="true"></input>Futamidő -
                                 </td>
                             </tr>
                         </table>
@@ -233,7 +242,7 @@
                         <th width="4%">Hónap</th>
                         <th width="16%">Hó eleji egyenleg</th>
                         <th width="16%">Törlesztő</th>
-                        <th width="16%">Kamat láb %</th>
+                        <th width="16%">Kamatláb %</th>
                         <th width="16%">Kamat Ft</th>
                         <th width="16%">Tőke</th>
                         <th width="16%">Akt. hó végéig fizetett</th>
@@ -249,9 +258,32 @@
 
         <div id="copyright">
             <p><small>Az oldalon tájékoztató jellegű számításokat lehet végezni egy hitel futamidejére vonatkozólag tetszőleges számú előtörlesztéssel kalkulálva. Az eredmények tájékoztató jellegűek, bármely bank valós hitelen végzett számításai ettől eltérhetnek. A szerző nem vállal felelősséget az eltérésekért és az esetleges számítási pontatlanságokért.</small></p>
-            <p><small>Copyright &copy; by Csaba504. Minden jog fenntartva.</small><br/><small>A kalkulációs oldal alapjaiért köszönet Gabonak.</small><br><small>A kalkulációs adatok mentése/betöltése modulért köszönet Kukel Attilának.</small></p>
-            <p><small>Kérdés vagy észrevétel esetén írjon <a href="mailto:csaba504@gmail.com">Csaba504</a> <a href="mailto:freemanowe@citromail.hu">Gabo</a>.</small></p>
-            <p><small><a href="https://github.com/csaba504/hitel_torleszto_kalkulator">GitHub</a></small></p>
+            <p><small>Copyright &copy; by <a href="mailto:csaba504@gmail.com">Csaba504</a>. Minden jog fenntartva. <a style="color: black;" href="https://github.com/csaba504/hitel_torleszto_kalkulator/blob/master/LICENSE">Apache License 2.0</a> <a style="color: black;" href="https://github.com/csaba504/hitel_torleszto_kalkulator">GitHub - Forrás kód</a>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onclick="$('#moreinfo').toggle();  $('html, body').animate({ scrollTop: $(document).height() }, 1000);">BŐVEBB INFÓ</a></small></p>
+            <div id="moreinfo" style="display:none;">
+	            <p class="mih">Kérdés vagy észrevétel</p>
+	            <blockquote>
+				Bármilyen kérdés/észrevétel/javaslat esetén írj nyugodtan: <a href="mailto:csaba504@gmail.com">csaba504@gmail.com</a>
+				</blockquote>
+	            <hr>
+	            <p class="mih">Köszönet</p>
+	            <blockquote>
+					A kalkulációs oldal alapjaiért köszönet Gabonak.<br>
+					A kalkulációs adatok mentése/betöltése modulért köszönet Kukel Attilának.
+				</blockquote> 
+				<hr>
+	            <p class="mih">Verzió</p>
+	            <blockquote>
+					V1.0.0
+					<ul>
+						<li>Alapok/refaktoring</li>
+						<li>THM kalkulátor</li>
+						<li>Statisztikai adatok</li>
+						<li>Mentés kibővítése</li>
+						<li>Kamatperiódusok módosítása</li>
+						<li>Kamatlábak sstatisztikája visszafele</li>
+					</ul>
+				</blockquote> 				
+            </div>
         </div>
     </body>
 </html>

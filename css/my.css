@@ -103,3 +103,14 @@ table.dataTable tbody td {
     visibility: visible;
     opacity: 1;
 }
+
+#tabla thead th {
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+}
+.mih{
+	font-weight: bold;
+}
