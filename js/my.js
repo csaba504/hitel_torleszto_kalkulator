@@ -411,7 +411,7 @@ function calc() {
 function thmCalculator(startPrice, fullPrice, duration){
 	//XXX: ie bug :S
 	try{
-		if (typeof a !== 'undefined')
+		if (typeof window.localStorage !== 'undefined')
 		{
 			var stored = window.localStorage["thm" + startPrice + " " +fullPrice + " " + duration];
 			if (stored){ 
@@ -429,7 +429,7 @@ function thmCalculator(startPrice, fullPrice, duration){
 		calcPrice = monthly * ( (1/r) - (1/  (r * (Math.pow((1+r), duration)))   )     );
 	}
 	thm = Math.round(r * 12 * 100 * 1000) / 1000; 
-	if (typeof a !== 'undefined')
+	if (typeof window.localStorage !== 'undefined')
 	{
 		window.localStorage["thm" + startPrice + " " +fullPrice + " " + duration] = thm;
 	}
