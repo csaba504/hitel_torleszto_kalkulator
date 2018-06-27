@@ -232,7 +232,12 @@ function calc() {
     var otherLoss 		= getNumVal($('#startfee'));
     var otherLossTotal 	= getNumVal($('#startfee'));
     var max_months_pay = 0;
-    
+        
+    gtag('event', startLoan, {
+    	  'event_category': getNumVal($('#rate')),
+    	  'event_label': torleszto,
+    	  'value': getNumVal($('#run'))
+    	});
     
     // read elotorlesztesek
     for(j = 0; j < prefieldnum; j++) {
