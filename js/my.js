@@ -233,9 +233,9 @@ function calc() {
     var otherLossTotal 	= getNumVal($('#startfee'));
     var max_months_pay = 0;
         
-    gtag('event', startLoan, {
-    	  'event_category': getNumVal($('#rate')),
-    	  'event_label': torleszto,
+    gtag('event', startLoan.toString(), {
+    	  'event_category': getNumVal($('#rate')).toString(),
+    	  'event_label': torleszto.toString(),
     	  'value': getNumVal($('#run'))
     	});
     
