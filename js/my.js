@@ -563,11 +563,13 @@ function addInterest(mounth, plusInterest){
 // functions by Kukel Attila <kukel.attila 'at' gmail 'dot' com>
 
 function data_load() {
+	
     data_from_storage = JSON.parse(sessionStorage.getItem("data"));
     if (data_from_storage) {
         $("#loan").val(data_from_storage.loan);
         $("#rate").val(data_from_storage.rate);
         $("#run").val(data_from_storage.run);
+		$("#runmonth").val("");
         $("#due").val(data_from_storage.due);
         $("#startfee").val(data_from_storage.startfee);
         $("#mountlyfee").val(data_from_storage.mountlyfee);
@@ -581,6 +583,7 @@ function data_load() {
                 $("#pre-aid-" + i).val(data_from_storage.pre.pre_aid[i]);
                 $("#pre-rate-" + i).val(data_from_storage.pre.pre_rate[i]);
                 $("#pre-cost-" + i).val(data_from_storage.pre.pre_cost[i]);
+                $("#pre-newdue-" + i).val(data_from_storage.pre.pre_newdue[i]);
                 $("input[name=pre-mode-" + i + "][value=" + data_from_storage.pre.pre_mode[i] + "]").click();
                 disablecost(i);
             }
@@ -606,6 +609,7 @@ function data_save() {
         pre_aid[key - 1] = $(value).find("td input#pre-aid-" + (key - 1) + "").val();
         pre_rate[key - 1] = $(value).find("td input#pre-rate-" + (key - 1) + "").val();
         pre_cost[key - 1] = $(value).find("td input#pre-cost-" + (key - 1) + "").val();
+        pre_newdue[key - 1] = $(value).find("td input#pre-newdue-" + (key - 1) + "").val();
         pre_mode[key - 1] = $(value).find("td input[name=pre-mode-" + (key - 1) + "]:checked").val();
     });
 
@@ -613,6 +617,7 @@ function data_save() {
         loan: $("#loan").val(),
         rate: $("#rate").val(),
         run: $("#run").val(),
+        runmonth: $("#runmonth").val(),
         due: $("#due").val(),
         startfee: $("#startfee").val(),
         mountlyfee: $("#mountlyfee").val(),
@@ -622,6 +627,7 @@ function data_save() {
             pre_aid: pre_aid,
             pre_rate: pre_rate,
             pre_cost: pre_cost,
+            pre_newdue: pre_newdue,
             pre_mode: pre_mode,
             key_count: $("input[id^=month-]").length
         }
