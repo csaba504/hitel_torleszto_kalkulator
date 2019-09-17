@@ -601,6 +601,7 @@ var pre_add = new Array();
 var pre_aid = new Array();
 var pre_rate = new Array();
 var pre_cost = new Array();
+var pre_newdue = new Array();
 var pre_mode = new Array();
 function data_save() {
     $.each($("#pre-inputs tr"), function (key, value) {
