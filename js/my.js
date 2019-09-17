@@ -191,7 +191,7 @@ function torlesztoszamitas(osszeg, kamat, honapok) {
 }
 
 function calcdue() {
-    var futamido = getNumVal($('#run')) * 12.0;
+    var futamido = getNumVal($('#runmonth'));
     var kamat = getNumVal($('#rate')) / 1200.0;
     var remain = getNumVal($('#loan'));
     var torleszto = torlesztoszamitas(remain, kamat, futamido);
@@ -202,9 +202,11 @@ function calcdue() {
 function disablecost(id) {
     if(parseInt($('input[name=pre-mode-' + id + ']:checked').val())) {
         $('#pre-cost-' + id).prop('disabled', false);
+        $('#pre-newdue-' + id).prop('disabled', false);
     }
     else {
         $('#pre-cost-' + id).prop('disabled', true);
+        $('#pre-newdue-' + id).prop('disabled', true);
     }
 }
 
@@ -213,8 +215,12 @@ var diagramdata_year = new Array();
 var tabledata = new Array();
 
 function calc() {
+	
+	if (getNumVal($('#runmonth')) == 0)
+		$('#runmonth').val($('#run').val() * 12);
+	
 	//// Default setup
-    var futamido = getNumVal($('#run')) * 12.0;
+    var futamido = getNumVal($('#runmonth'));
     var new_futamido = futamido;
     var mar_befizetett = 0;
     var kamat = getNumVal($('#rate')) / 1200.0;
@@ -247,18 +253,20 @@ function calc() {
         var addfull = getNumVal($('#pre-add-' + j));
         var rate = getNumVal($('#pre-rate-' + j)) / 100;
         var cost = getNumVal($('#pre-cost-' + j));
+        var newdue = Math.abs(getNumVal($('#pre-newdue-' + j)));
         var mode = parseInt($('input[name=pre-mode-' + j + ']:checked').val());
 
         if(mode != 0) add = add - cost;
         add = add - (add * rate);
         if(mode == 0) {
             lloss = Math.round(add * rate);
+			newdue = 0;
         }
         else {
             lloss = cost + Math.round(add * rate);
         }
         if(month > 0 && add > 0){
-        	elotorl.push([month, add, lloss, mode, aid, addfull]);
+        	elotorl.push([month, add, lloss, mode, aid, addfull, newdue]);
         }
     }
     for(j = 0; j < interestFieldNum; j++) {
@@ -327,10 +335,11 @@ function calc() {
         	
         	if(honap == month) {
         		var add = elotorl[j][1];
-        		var addfull = elotorl[j][5];
         		var lloss = elotorl[j][2];
         		var mode = elotorl[j][3];
         		var aid = elotorl[j][4];
+        		var addfull = elotorl[j][5];
+        		var newdue = elotorl[j][6];
         		
         		pluspay += addfull - aid;
         		totalAid += aid;
@@ -345,6 +354,8 @@ function calc() {
         			torleszto = torlesztoszamitas(remain,kamat,new_futamido);
         		}
         		else{
+					if (newdue != 0)
+						torleszto = newdue;
         			new_futamido = futamidoszamitas(remain,kamat,torleszto,new_futamido);
         		}
         		tabledata.push([honap, '', '', '' ,'', convert2Money2(add), '', '']);
@@ -494,7 +505,7 @@ function drawBasic() {
 
 var prefieldnum = 1;
 function addPreFields() {
-    var tmp = '<tr><td><input id="month-' + prefieldnum + '" class="formatted-integer" type="text" placeholder="Hónap" onchange="calc();"></input></td><td><input id="pre-add-' + prefieldnum + '" class="money" type="text" placeholder="Összeg" onchange="calc();"></input> Ft</td><td><input id="pre-aid-' + prefieldnum + '" class="money" type="text" placeholder="Támogatás" onchange="calc();"></input> Ft</td><td><input id="pre-rate-' + prefieldnum + '" class="formatted-double" type="text" placeholder="Kamat" onchange="calc();"></input> %</td><td><input id="pre-cost-' + prefieldnum + '" class="money" type="text" placeholder="Költség" onchange="calc();"></input> Ft</td><td>- Törlesztő<input name="pre-mode-' + prefieldnum + '" type="radio" value="0" onchange="calc();disablecost(' + prefieldnum + ');"></input><input name="pre-mode-' + prefieldnum + '" type="radio" value="1" onchange="calc();disablecost(' + prefieldnum + ');" checked="true"></input>Futamidő -</td></tr>';
+    var tmp = '<tr><td><input id="month-' + prefieldnum + '" class="formatted-integer" type="text" placeholder="Hónap" onchange="calc();"></input></td><td><input id="pre-add-' + prefieldnum + '" class="money" type="text" placeholder="Összeg" onchange="calc();"></input> Ft</td><td><input id="pre-aid-' + prefieldnum + '" class="money" type="text" placeholder="Támogatás" onchange="calc();"></input> Ft</td><td><input id="pre-rate-' + prefieldnum + '" class="formatted-double" type="text" placeholder="Kamat" onchange="calc();"></input> %</td><td><input id="pre-cost-' + prefieldnum + '" class="money" type="text" placeholder="Költség" onchange="calc();" disabled=disabled></input> Ft</td><td style="white-space: nowrap;"><input id="pre-newdue-' + prefieldnum + '" class="money" type="text" placeholder="Új havi törlesztő" disabled=disabled onchange="calc();"></input> Ft</td><td>Törlesztő<input name="pre-mode-' + prefieldnum + '" type="radio" value="0" onchange="calc();disablecost(' + prefieldnum + ');"  checked="true"></input><input name="pre-mode-' + prefieldnum + '" type="radio" value="1" onchange="calc();disablecost(' + prefieldnum + ');"></input>Futamidő</td></tr>';
     $('#pre-inputs').append(tmp);
 
     $("#pre-add-" + prefieldnum).on("input", function(event) {
@@ -504,6 +515,9 @@ function addPreFields() {
     	$(this).val(procNumberInput($(this).val(),true,true,1,2));
     });
     $("#pre-cost-" + prefieldnum).on("input", function(event) {
+        $(this).val(procNumberInput($(this).val(),true,true,1,2));
+    });
+    $("#pre-newdue-" + prefieldnum).on("input", function(event) {
         $(this).val(procNumberInput($(this).val(),true,true,1,2));
     });
     $("#month-" + prefieldnum).on("input", function(event) {

@@ -4,8 +4,10 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Hitel Törlesztő Kalkulátor / Tervező V1.0.0</title>
-
+        <title>Hitel Törlesztő Kalkulátor / Hitel Tervező V1.1.0</title>
+  <meta name="description" content="Egy hitel tervező, amiben szabadon állítható az előtörlesztés és a kamatláb változás. Nézd meg, hogy a jövőben hogyan fog alakulni a hiteled, és a módosításokkal mennyit tudsz spórolni! Ne higgy másnak! Számold ki magad!">
+  <meta name="keywords" content="Hitel visszafizetés, Hitel törlesztő, Hogy éri meg visszafizetni, Hitel tervező, Hitel változás, Hitel előtörlesztés, hitel előtörlesztés kalkulátor">
+  <meta name="author" content="Kis Csaba / Csaba504">
         <link rel="stylesheet" href="datatables/css/jquery.dataTables.min.css">
         <link rel="stylesheet" href="datatables/css/buttons.dataTables.min.css">
         <link rel="stylesheet" href="css/my.css">
@@ -50,7 +52,11 @@
 
                     <tr>
                         <td><label>Futamidő: </label></td>
-                        <td><input id="run" class="formatted-integer" type="text" placeholder="Hitel összege" value="15" onchange="calc();"></input> Év</td>
+                        <td>
+							<input id="run" class="formatted-integer" type="text" placeholder="Év" value="15" onchange="$('#runmonth').val($(this).val() * 12);calc();" style="width: 40px;"></input> Év
+							<input id="runmonth" class="formatted-integer" type="text" placeholder="Hónap" value="" onchange="$('#run').val(Math.round($(this).val() / 12 * 100) / 100); calc();" style="width: 40px;"></input> Hónap
+						
+						</td>
                         <td></td>
                     </tr>
 
@@ -90,6 +96,7 @@
                                 <th style="white-space: nowrap;">Ebből (Állami)támogatás</th>
                                 <th style="white-space: nowrap;">Előtörlesztési díj</th>
                                 <th style="white-space: nowrap;">Szerződésmódosítási költség</th>
+                                <th style="white-space: nowrap;">Új havi törlesztő</th>
                                 <th style="white-space: nowrap;">Mi csökkenjen?</th>
                             </tr>
 
@@ -98,10 +105,13 @@
                                 <td style="white-space: nowrap;"><input id="pre-add-0" class="money" type="text" placeholder="Összeg" onchange="calc();"></input> Ft</td>
                                 <td style="white-space: nowrap;"><input id="pre-aid-0" class="money" type="text" placeholder="Támogatás" onchange="calc();"></input> Ft</td>
                                 <td style="white-space: nowrap;"><input id="pre-rate-0" class="formatted-double" type="text" placeholder="Kamat" onchange="calc();"></input> %</td>
-                                <td style="white-space: nowrap;"><input id="pre-cost-0" class="money" type="text" placeholder="Költség" onchange="calc();"></input> Ft</td>
+                                <td style="white-space: nowrap;"><input id="pre-cost-0" class="money" type="text" placeholder="Költség" disabled=disabled onchange="calc();"></input> Ft</td>
+                                <td style="white-space: nowrap;"><input id="pre-newdue-0" class="money" type="text" placeholder="Új havi törlesztő" disabled=disabled onchange="calc();"></input> Ft</td>
                                 <td style="white-space: nowrap;padding-right:35px;">
-                                   <div class="tooltip">?<span class="tooltiptext">A bankok alapértelmezetten a<br> <b>Törlesztőt</b> csökkentik!<hr>A Futamidő csökkentése általában esetenként:<br> +30.000 Ft <br>+ 1% közjegyzői díj <br>+ előtörlesztési díj</span></div> - Törlesztő<input name="pre-mode-0" type="radio" value="0" onchange="calc();disablecost(0);"></input><input name="pre-mode-0" type="radio" value="1" onchange="calc();disablecost(0);" checked="true"></input>Futamidő -
-                                </td>
+                                   
+								   Törlesztő<input name="pre-mode-0" type="radio" value="0" onchange="calc();disablecost(0);" checked="true"></input><input name="pre-mode-0" type="radio" value="1" onchange="calc();disablecost(0);"></input>Futamidő
+									<div class="tooltip">?<span class="tooltiptext">A bankok alapértelmezetten a<br> <b>Törlesztőt</b> csökkentik!<hr>A Futamidő csökkentése általában esetenként:<br> +60.000 Ft <br>+ 1% közjegyzői díj <br>+ előtörlesztési díj</span></div>
+								</td>
                             </tr>
                         </table>
                     </td>
@@ -132,7 +142,7 @@
                                 <td style="white-space: nowrap;"><input id="interest-month-0" class="formatted-integer" type="text" placeholder="Hónap" onchange="calc();"></input></td>
                                 <td style="white-space: nowrap;"><input id="interest-rate-0" class="" type="text" placeholder="Új kamatláb" onchange="calc();"></input>%</td>
                                 <td style="white-space: nowrap;padding-right:35px;">
-                                    - Törlesztő<input name="interest-mode-0" type="radio" value="0" onchange="calc();"  checked="true"></input><input name="interest-mode-0" type="radio" value="1" onchange="calc();"></input>Futamidő -
+                                    Törlesztő<input name="interest-mode-0" type="radio" value="0" onchange="calc();"  checked="true"></input><input name="interest-mode-0" type="radio" value="1" onchange="calc();"></input>Futamidő
                                 </td>
                             </tr>
                         </table>
@@ -282,7 +292,14 @@
 						<li>Kamatperiódusok módosítása</li>
 						<li>Kamatlábak sstatisztikája visszafele</li>
 					</ul>
-				</blockquote> 				
+				</blockquote> 		
+	            <blockquote>
+					V1.1.0
+					<ul>
+						<li>Hónapra is lehet kalkulálni</li>
+						<li>Szerződés módosításnál egyéni összeg is megadható</li>
+					</ul>
+				</blockquote> 								
             </div>
         </div>
     </body>
