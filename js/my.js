@@ -583,7 +583,8 @@ function data_load() {
                 $("#pre-aid-" + i).val(data_from_storage.pre.pre_aid[i]);
                 $("#pre-rate-" + i).val(data_from_storage.pre.pre_rate[i]);
                 $("#pre-cost-" + i).val(data_from_storage.pre.pre_cost[i]);
-                $("#pre-newdue-" + i).val(data_from_storage.pre.pre_newdue[i]);
+				if (typeof(data_from_storage.pre.pre_newdue) != "undefined")
+					$("#pre-newdue-" + i).val(data_from_storage.pre.pre_newdue[i]);
                 $("input[name=pre-mode-" + i + "][value=" + data_from_storage.pre.pre_mode[i] + "]").click();
                 disablecost(i);
             }
