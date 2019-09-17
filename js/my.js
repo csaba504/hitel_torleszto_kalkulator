@@ -569,7 +569,7 @@ function data_load() {
         $("#loan").val(data_from_storage.loan);
         $("#rate").val(data_from_storage.rate);
         $("#run").val(data_from_storage.run);
-		$("#runmonth").val("");
+		$("#runmonth").val(data_from_storage.runmonth);
         $("#due").val(data_from_storage.due);
         $("#startfee").val(data_from_storage.startfee);
         $("#mountlyfee").val(data_from_storage.mountlyfee);
