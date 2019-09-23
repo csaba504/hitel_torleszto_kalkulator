@@ -4,9 +4,9 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Hitel Törlesztő Kalkulátor / Hitel Tervező V1.1.0</title>
-  <meta name="description" content="Egy hitel tervező, amiben szabadon állítható az előtörlesztés és a kamatláb változás. Nézd meg, hogy a jövőben hogyan fog alakulni a hiteled, és a módosításokkal mennyit tudsz spórolni! Ne higgy másnak! Számold ki magad!">
-  <meta name="keywords" content="Hitel visszafizetés, Hitel törlesztő, Hogy éri meg visszafizetni, Hitel tervező, Hitel változás, Hitel előtörlesztés, hitel előtörlesztés kalkulátor">
+        <title>Hitel Törlesztő Kalkulátor / Hitel Tervező V1.1.1</title>
+  <meta name="description" content="Egy hitel tervező, amiben szabadon állítható az előtörlesztés és a kamatláb változás. Alakítsd a hiteled! Ne higgy másnak! Számold ki magad!">
+  <meta name="keywords" content="Hitel visszafizetés, Hitel törlesztő, Hitel törlesztés, Hogy éri meg visszafizetni, Hitel tervező, Hitel változás, Hitel előtörlesztés, hitel előtörlesztés kalkulátor">
   <meta name="author" content="Kis Csaba / Csaba504">
         <link rel="stylesheet" href="datatables/css/jquery.dataTables.min.css">
         <link rel="stylesheet" href="datatables/css/buttons.dataTables.min.css">
@@ -37,7 +37,7 @@
                         <td><label>Hitel összege: </label></td>
                         <td><input id="loan" class="money" type="text" placeholder="Hitel összege" value="10000000" onchange="calc();"></input> Ft</td>
                         <td></td>
-                        <td rowspan="4" style="border-left:1px solid grey;padding-left:35px;     width: 27%;">Ebbe a részbe kerülnek a hitelkalkulátorból(bankmonitor, bankráció,...) kidobott értékek. <br/>Az "éves kamat" nem egyenlő a "THM"-mel.<br/>Ha nincs meg a kezdő törlesztőrészlet a "Törlesztő számítása" gomb segítségével kiszámolható egy optimális érték.</td>
+                        <td rowspan="4" style="border-left:1px solid grey;padding-left:35px;     width: 27%;">Ebbe a részbe kerülnek a hitelkalkulátorból (bankmonitor, bankráció,...) kidobott értékek. <br/>Az "éves kamat" nem egyenlő a "THM"-mel.<br/>Ha nincs meg a kezdő törlesztőrészlet a "Törlesztő számítása" gomb segítségével kiszámolható egy optimális érték.</td>
                         <td rowspan="4" style="border-left:1px solid grey;padding-left:35px; text-align: left;">
                             Kalkulációs adatok mentése: &nbsp;<button class="" id="data_export" type="button">Mentés</button><br/>
                             Kalkulációs adatok betöltése: <input class="" id="data_import" type="file" name="data_import"></input>
@@ -80,9 +80,8 @@
         </div>
 
         <div class="input-table">
-           Ebbe a részbe kerülnek az előtörlesztés(ek) adatai. A "Hozzáad" gombbal tetszőleges mennyiségű előtörlesztés lehetséges. Ha a kamat és a költség nincs kitöltve, 0-ás értékkel számol.
-          <br>Fundamenta: 50 	hónap &nbsp; Összeg: 1 302 559 Ft Ebből támogatás: 270 769 Ft <a target="_blank" href="https://partner.fundamenta.hu/web/guest/online-kotes?tarifa=A20&haviRata=20000&szerzOssz=0" class="tooltip">?<span class="tooltiptext">Támogatás:<br> Állami támogatás +<br> Betéti kamat támogatás és befizetés után -<br> Számlanyitási díj</span></a>
-          <br>Fundamenta: 120 	hónap Összeg: 3 135 476 Ft Ebből támogatás: 659 276 Ft <a target="_blank" href="https://partner.fundamenta.hu/web/guest/online-kotes" class="tooltip">?<span class="tooltiptext">Támogatás:<br> Állami támogatás +<br> Betéti kamat támogatás és befizetés után -<br> Számlanyitási díj</span></a>
+           Ebbe a részbe kerülnek az előtörlesztés(ek) adatai. A "Hozzáad" gombbal tetszőleges mennyiségű előtörlesztés lehetséges. Ha a kamat és a költség nincs kitöltve, 0-ás értékkel számol.<br>
+		   Fontos, hogy minden előtörlesztést a hitel törlesztésének napján számol a rendszer. Ha a hó közepén törlesztesz, akkor hozzávetőlegesen 0,6%-ot adj hozzá az előtörlesztési díjhoz!
           
            <hr>
         
@@ -163,7 +162,7 @@
                 </tr>
                 <tr>
                     <td align="left">
-                        A kamatperiódusok a bankok átlagos kamatlábát veszik alapul időben visszafele.
+                        A kamatperiódusok a bankok átlagos kamatlábát veszik alapul időben visszafele. Ha nem fix hiteled van, akkor feltétlenül kalkulálj azzal, hogy a jövőben a kamatláb emelkedni fog!
                     <td>
                 </tr>
             </table>
@@ -271,7 +270,8 @@
             <div id="moreinfo" style="display:none;">
 	            <p class="mih">Kérdés vagy észrevétel</p>
 	            <blockquote>
-				Bármilyen kérdés/észrevétel/javaslat esetén írj nyugodtan: <a href="mailto:csaba504@gmail.com">csaba504@gmail.com</a>
+				Bármilyen kérdés/észrevétel/javaslat esetén írj nyugodtan: <a href="mailto:csaba504@gmail.com">csaba504@gmail.com</a><br>
+				A fenti számításokat főleg a saját hitelemen ellenőriztem vissza. Ha bármilyen eltérést, hibát találsz, írj nyugodtan.
 				</blockquote>
 	            <hr>
 	            <p class="mih">Köszönet</p>
@@ -289,7 +289,7 @@
 						<li>Statisztikai adatok</li>
 						<li>Mentés kibővítése</li>
 						<li>Kamatperiódusok módosítása</li>
-						<li>Kamatlábak sstatisztikája visszafele</li>
+						<li>Kamatlábak statisztikája visszafele</li>
 					</ul>
 				</blockquote> 		
 	            <blockquote>
@@ -300,7 +300,17 @@
 						<li>A hónapot és az új törlesztőket is mentse el</li>
 						<li>Legyen kompatibilis a régi mentésekkel</li>
 					</ul>
-				</blockquote> 								
+				</blockquote>
+				<blockquote>
+					V1.1.1
+					<ul>
+						<li>Szövegezés pontosítása saját tapasztalatok alapján</li>
+						<li>Helyesírás</li>
+						<li>Fundamenta szöveg törlés</li>
+						<li>Fundamenta: 50 	hónap &nbsp; Összeg: 1 302 559 Ft Ebből támogatás: 270 769 Ft <a target="_blank" href="https://partner.fundamenta.hu/web/guest/online-kotes?tarifa=A20&haviRata=20000&szerzOssz=0" class="tooltip">?<span class="tooltiptext">Támogatás:<br> Állami támogatás +<br> Betéti kamat támogatás és befizetés után -<br> Számlanyitási díj</span></a></li>
+						<li>Fundamenta: 120 	hónap Összeg: 3 135 476 Ft Ebből támogatás: 659 276 Ft <a target="_blank" href="https://partner.fundamenta.hu/web/guest/online-kotes" class="tooltip">?<span class="tooltiptext">Támogatás:<br> Állami támogatás +<br> Betéti kamat támogatás és befizetés után -<br> Számlanyitási díj</span></a></li>
+					</ul>
+				</blockquote> 					
             </div>
         </div>
 		
