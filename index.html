@@ -37,8 +37,17 @@
                         <td><label>Hitel összege: </label></td>
                         <td><input id="loan" class="money" type="text" placeholder="Hitel összege" value="10000000" onchange="calc();"></input> Ft</td>
                         <td></td>
-                        <td rowspan="4" style="border-left:1px solid grey;padding-left:35px;     width: 27%;">Ebbe a részbe kerülnek a hitelkalkulátorból (bankmonitor, bankráció,...) kidobott értékek. <br/>Az "éves kamat" nem egyenlő a "THM"-mel.<br/>Ha nincs meg a kezdő törlesztőrészlet a "Törlesztő számítása" gomb segítségével kiszámolható egy optimális érték.</td>
-                        <td rowspan="4" style="border-left:1px solid grey;padding-left:35px; text-align: left;">
+                        <td rowspan="6" style="border-left:1px solid grey;padding-left:35px;     width: 27%;">Ebbe a részbe kerülnek a hitelkalkulátorból (bankmonitor, bankráció,...) kidobott értékek. <br/>Az "éves kamat" nem egyenlő a "THM"-mel.<br/>Ha nincs meg a kezdő törlesztőrészlet a "Törlesztő számítása" gomb segítségével kiszámolható egy optimális érték.
+                        <br><br>
+                        Hiba jelentés: <a href="https://github.com/csaba504/hitel_torleszto_kalkulator/issues">Github Issues</a><br>
+                        Kapcsolat: <a href="mailto:csaba504@gmail.com">csaba504@gmail.com</a><br>
+                        Támogatás: <a href="https://www.patreon.com/csaba504" target="new">Patreon</a> <br> 
+                        BTC: <a href="#" onclick="$('#BTC').toggle();">1M3CKbdD6RWYgHzj83sKGZrrgE7YXb5jm1</a>
+                        <img id="BTC" style="display:none;" src="BTC.png"><br>
+                        DOGE: <a href="#"  onclick="$('#DOGE').toggle();">DDiAr4awUzYB4gQtPTEUw5pYLzWd57AJbn</a>
+                        <img id="DOGE" style="display:none;" src="DOGE.png"><br>
+                        </td>
+                        <td rowspan="6" style="border-left:1px solid grey;padding-left:35px; text-align: left;">
                             Kalkulációs adatok mentése: &nbsp;<button class="" id="data_export" type="button">Mentés</button><br/>
                             Kalkulációs adatok betöltése: <input class="" id="data_import" type="file" name="data_import"></input><br/><br/><br/>
                             Kalkulációs adatok mentése böngészőbe: <br><input id="data_export_browser" type="text" placeholder="Neve?"><button class="" id="data_export_browser_button" type="button">Mentés</button><br/>
@@ -324,6 +333,10 @@
 						<li>Összesen fizetett duplan szamol #3</li>
 						<li>El lehet menteni a böngészőbe is a mentett számításokat</li>
 						<li>[Feature Request] Alapadatok és törlesztők lokális tárolása #2</li>
+						<li>Támogatási blokk</li>
+						<li>Patreon: https://www.patreon.com/csaba504</li>
+						<li>BTC: 1M3CKbdD6RWYgHzj83sKGZrrgE7YXb5jm1</li>
+						<li>DOGE: DDiAr4awUzYB4gQtPTEUw5pYLzWd57AJbn</li>
 					</ul>
 				</blockquote> 					
             </div>
