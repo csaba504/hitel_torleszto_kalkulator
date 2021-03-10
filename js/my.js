@@ -8,6 +8,10 @@ $(function() {
     $("#data_export").click(data_export);
     document.getElementById('data_import').addEventListener('change', data_import, false);
 
+	$("#data_export_browser_button").click(data_export_browser);
+	$("#data_import_browser_load").click(data_import_browser_load);
+	$("#data_import_browser_delete").click(data_import_browser_delete);
+	data_import_load();	
     $(".formatted-double").on("input", function(event) {
         $(this).val(procNumberInput($(this).val()));
     });
@@ -259,11 +263,11 @@ function calc() {
         if(mode != 0) add = add - cost;
         add = add - (add * rate);
         if(mode == 0) {
-            lloss = Math.round(add * rate);
+            lloss = addfull - add;
 			newdue = 0;
         }
         else {
-            lloss = cost + Math.round(add * rate);
+            lloss = cost + addfull - add;
         }
         if(month > 0 && add > 0){
         	elotorl.push([month, add, lloss, mode, aid, addfull, newdue]);
@@ -344,7 +348,8 @@ function calc() {
         		pluspay += addfull - aid;
         		totalAid += aid;
         		otherLossTotal += lloss;
-        		loss = loss + lloss;
+        		//Bug Fix #3
+				//loss = loss + lloss;
         		remain = remain - add;
         		if (remain < 0){
         			remain = 0;
@@ -562,9 +567,9 @@ function addInterest(mounth, plusInterest){
 
 // functions by Kukel Attila <kukel.attila 'at' gmail 'dot' com>
 
-function data_load() {
+function data_load(name) {
 	
-    data_from_storage = JSON.parse(sessionStorage.getItem("data"));
+    data_from_storage = JSON.parse(sessionStorage.getItem(name));
     if (data_from_storage) {
         $("#loan").val(data_from_storage.loan);
         $("#rate").val(data_from_storage.rate);
@@ -603,7 +608,7 @@ var pre_rate = new Array();
 var pre_cost = new Array();
 var pre_newdue = new Array();
 var pre_mode = new Array();
-function data_save() {
+function data_save(name) {
     $.each($("#pre-inputs tr"), function (key, value) {
         if (key === 0) {
             // skip first row
@@ -637,23 +642,61 @@ function data_save() {
             key_count: $("input[id^=month-]").length
         }
     };
-    sessionStorage.setItem("data", JSON.stringify(data_to_save));
+    sessionStorage.setItem(name, JSON.stringify(data_to_save));
 }
 
 function data_export() {
     if (typeof (Storage) !== "undefined") {
         //save data
-        data_save();
+        data_save('UtolsóMentés');
         var element = document.createElement("a");
         element.style.display = "none";
-        element.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(sessionStorage.getItem("data")));
-        element.setAttribute("download", "szamolos.json");
+        element.setAttribute("href", "data:text/json;charset=utf-8," + encodeURIComponent(sessionStorage.getItem("UtolsóMentés")));
+        element.setAttribute("download", "szamolo.json");
         document.body.appendChild(element);
         element.click();
         document.body.removeChild(element);
     }
     else {
         alert("A mentés csak HTML5 támogatással működik.");
+    }
+}
+
+function data_import_browser_delete(){
+	sessionStorage.removeItem($('#data_import_browser').val());
+	data_import_load();
+}
+
+function data_import_browser_load(){
+	data_load($('#data_import_browser').val());
+}
+
+function data_export_browser() {
+    if (typeof (Storage) !== "undefined") {
+        //save data
+		name = $("#data_export_browser").val();
+		if (name== "")name=new Date().toISOString().substring(0, 19);
+        data_save(name);
+        alert('Elmentve a következő néven: ' + name);
+		data_import_load();
+    }
+    else {
+        alert("A mentés csak HTML5 támogatással működik.");
+    }
+}
+
+function data_import_load(){
+	$('#data_import_browser')
+    .find('option')
+    .remove();
+
+
+    var values = [],
+        keys = Object.keys(sessionStorage),
+        i = keys.length;
+
+    while ( i-- ) {
+	$('#data_import_browser').append($('<option>', {value:keys[i], text:keys[i]}));
     }
 }
 
@@ -667,8 +710,8 @@ function data_import(evt) {
     reader.onload = (function (theFile) {
         return function (e) {
             try {
-                sessionStorage.setItem("data", e.target.result);
-                data_load();
+                sessionStorage.setItem("UtolsóMentés", e.target.result);
+                data_load("UtolsóMentés");
             } catch (ex) {
 
             }

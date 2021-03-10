@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Hitel Törlesztő Kalkulátor / Hitel Tervező V1.1.1</title>
+        <title>Hitel Törlesztő Kalkulátor / Hitel Tervező V1.1.2</title>
   <meta name="description" content="Egy hitel tervező, amiben szabadon állítható az előtörlesztés és a kamatláb változás. Alakítsd a hiteled! Ne higgy másnak! Számold ki magad!">
   <meta name="keywords" content="Hitel visszafizetés, Hitel törlesztő, Hitel törlesztés, Hogy éri meg visszafizetni, Hitel tervező, Hitel változás, Hitel előtörlesztés, hitel előtörlesztés kalkulátor">
   <meta name="author" content="Kis Csaba / Csaba504">
@@ -40,7 +40,11 @@
                         <td rowspan="4" style="border-left:1px solid grey;padding-left:35px;     width: 27%;">Ebbe a részbe kerülnek a hitelkalkulátorból (bankmonitor, bankráció,...) kidobott értékek. <br/>Az "éves kamat" nem egyenlő a "THM"-mel.<br/>Ha nincs meg a kezdő törlesztőrészlet a "Törlesztő számítása" gomb segítségével kiszámolható egy optimális érték.</td>
                         <td rowspan="4" style="border-left:1px solid grey;padding-left:35px; text-align: left;">
                             Kalkulációs adatok mentése: &nbsp;<button class="" id="data_export" type="button">Mentés</button><br/>
-                            Kalkulációs adatok betöltése: <input class="" id="data_import" type="file" name="data_import"></input>
+                            Kalkulációs adatok betöltése: <input class="" id="data_import" type="file" name="data_import"></input><br/><br/><br/>
+                            Kalkulációs adatok mentése böngészőbe: <br><input id="data_export_browser" type="text" placeholder="Neve?"><button class="" id="data_export_browser_button" type="button">Mentés</button><br/>
+                            Kalkulációs adatok betöltése: 
+<select name="data_import_browser" id="data_import_browser">
+</select><button class="" id="data_import_browser_load" type="button">Betöltés</button><button class="" id="data_import_browser_delete" type="button">Törlés</button>
                         </td>
                     </tr>
 
@@ -309,6 +313,17 @@
 						<li>Fundamenta szöveg törlés</li>
 						<li>Fundamenta: 50 	hónap &nbsp; Összeg: 1 302 559 Ft Ebből támogatás: 270 769 Ft <a target="_blank" href="https://partner.fundamenta.hu/web/guest/online-kotes?tarifa=A20&haviRata=20000&szerzOssz=0" class="tooltip">?<span class="tooltiptext">Támogatás:<br> Állami támogatás +<br> Betéti kamat támogatás és befizetés után -<br> Számlanyitási díj</span></a></li>
 						<li>Fundamenta: 120 	hónap Összeg: 3 135 476 Ft Ebből támogatás: 659 276 Ft <a target="_blank" href="https://partner.fundamenta.hu/web/guest/online-kotes" class="tooltip">?<span class="tooltiptext">Támogatás:<br> Állami támogatás +<br> Betéti kamat támogatás és befizetés után -<br> Számlanyitási díj</span></a></li>
+					</ul>
+				</blockquote> 					
+				<blockquote>
+					V1.1.2
+					<ul>
+						<li>Bug Fix</li>
+						<li>thx: laszlopapai, reczuprik</li>
+						<li>Előtörlesztés díja #1</li>
+						<li>Összesen fizetett duplan szamol #3</li>
+						<li>El lehet menteni a böngészőbe is a mentett számításokat</li>
+						<li>[Feature Request] Alapadatok és törlesztők lokális tárolása #2</li>
 					</ul>
 				</blockquote> 					
             </div>
