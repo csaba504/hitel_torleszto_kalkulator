@@ -219,6 +219,25 @@ var diagramdata_year = new Array();
 var tabledata = new Array();
 
 function calc() {
+	try{
+		if (typeof window.localStorage !== 'undefined')
+		{
+			var run_calc = parseInt(window.localStorage["RunCalc"]);
+			if (isNaN(run_calc))run_calc = 1;
+			if (run_calc % 100 == 0){
+				if (run_calc < 1001){
+					alert("Köszönöm, hogy használod a Hitel törlesztő kalkulátort!\nRemélem, hogy nagyon sokat tudtam segíteni abban, hogy a számodra a lehető legjobb döntést hozd meg!\n \nHa úgy érzed, hogy a munkámmal hozzájárultam az életedhez, akkor kérlek támogass engem.\n\nElőre is nagyon köszönöm.\nKis Csaba");
+				}else if(run_calc < 10001){
+					alert("Köszönöm, hogy használaod a Hitel törlesztő kalkulátort!\nÖrülök, hogy ilyen sokat használod, mert akkor gondolom hasznos számodra és segít a munkában, vagy az élet egyik legfontosabb pénzügyi döntésében!\n\nHa megteheted, kérkek támogass engem bármilyen formában, hogy tudjak hasonló hasznos tartalmakat készíteni!\n\nKöszönettel, Kis Csaba");
+				}else{
+					alert("Úgy látom, hogy ezt az oldalt a munkádhoz használod, amiből neked bevételed származik. Kérlek támogasd a munkámat bármilyen módon.\nHa tudok neked esetleg segíteni bármilyen fejlesztéssel kapcsolatban, akkor vedd fel velem a kapcsolatot.\n\nKöszönöm, Kis Csaba");
+				}
+			}
+			window.localStorage["RunCalc"] = run_calc +1;
+		}
+	}catch(err){};
+	
+	
 	
 	if (getNumVal($('#runmonth')) == 0)
 		$('#runmonth').val($('#run').val() * 12);
