@@ -850,12 +850,12 @@ async function getLoginConfirm(){
     let token=getToken();
     if(!token){
         while(!email||!password){
-            email=prompt("Please enter your email")
+            email=prompt("Kérlek add meg az email címed")
             while(!validateEmail(email)){
-                email=prompt('email was not valid please re-enter')
+                email=prompt('Érvénytelen email cím')
             }
             if(email){
-                password=prompt('Please give us a password')
+                password=prompt('Kérlek adj meg egy azonositó kódot')
             }
         }
     try{
