@@ -69,7 +69,89 @@ $(function() {
     calc();
 });
 
+async function login(email,password){
+    
+    const _password=sha256(password)
+    const response=await axios({
+        method: 'post',
+        url: 'http://localhost:3000/login',
+        data: {
+          email,password:_password
+        }
+      });
+    return response.data.token
+}
+login('tutrai.gergo011@gmail.com','testPass').then(token=>saveToken(token))
+async function saveCalculation(calculation){
+    const b64Calc=btoa(JSON.stringify(calculation));
+    const token=getToken();
+    if(!token) throw new Error('No token found')
+    const authHeader=`Bearer ${token}`
+    
+    const response=await axios({
+        method: 'post',
+        url: 'http://localhost:3000/user/calculation',
+        data: {
+          content:b64Calc
+        },
+        headers:{
+            'authorization': authHeader
+        }
+      });
+    return response.data
+}
 
+async function getSavedCalculations(){
+    const token=getToken();
+    if(!token) throw new Error('No token found')
+    const authHeader=`Bearer ${token}`
+    const response=await axios({
+        method: 'get',
+        url: 'http://localhost:3000/user/calculation',
+        headers:{
+            'authorization': authHeader
+        }
+      });
+    return response.data
+}
+//getSavedCalculations().then((data)=>console.log(data.data))
+
+async function getSavedCalculationById(id){
+    const token=getToken();
+    if(!token) throw new Error('No token found')
+    const authHeader=`Bearer ${token}`
+    const response=await axios({
+        method: 'get',
+        url: `http://localhost:3000/user/calculation/${id}`,
+        headers:{
+            'authorization': authHeader
+        }
+      });
+    return response.data
+}
+getSavedCalculationById(15).then((data)=>console.log(JSON.parse(atob(data.data.content))))
+//saveCalculation({string:'valueasdasdasdasdaasddas'}).then(data=>alert(data.message)).catch(e=>onFetchError(e))
+function saveToken(token){
+    localStorage.setItem('default:access_token',token)
+}
+
+function onInvalidHeader(){
+    localStorage.removeItem('default:access_token')
+}
+
+function onFetchError(error){
+    if(error.response.data.message==='INVALID_OR_MISSING_HEADER'){
+        onInvalidHeader()
+        return
+    }
+    alert(error.response.data.message.toLowerCase().split('_').join(' '))
+}
+
+function getToken(){
+    return localStorage.getItem('default:access_token')
+}
+
+login('tutrai.gergo011@gmail.com','testPass').then((token)=>saveToken(token)).catch(err=>onFetchError(err));
 function procNumberInput(value, real, signed, precision, padTo, forcePad) {
 	real = typeof real !== 'undefined' ? real : true;
 	signed = typeof signed !== 'undefined' ? signed : true;
