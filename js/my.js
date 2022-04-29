@@ -6,7 +6,7 @@ var tableinstance;
 
 $(function() {
     $("#data_export").click(data_export);
-    document.getElementById('data_import').addEventListener('change', data_import, false);
+    //document.getElementById('data_import').addEventListener('change', data_import, false);
 
 	$("#data_export_browser_button").click(data_export_browser);
 	$("#data_import_browser_load").click(data_import_browser_load);
@@ -69,89 +69,7 @@ $(function() {
     calc();
 });
 
-async function login(email,password){
-    
-    const _password=sha256(password)
-    const response=await axios({
-        method: 'post',
-        url: 'http://localhost:3000/login',
-        data: {
-          email,password:_password
-        }
-      });
-    return response.data.token
-}
-login('tutrai.gergo011@gmail.com','testPass').then(token=>saveToken(token))
-async function saveCalculation(calculation){
-    const b64Calc=btoa(JSON.stringify(calculation));
-    const token=getToken();
-    if(!token) throw new Error('No token found')
-    const authHeader=`Bearer ${token}`
-    
-    const response=await axios({
-        method: 'post',
-        url: 'http://localhost:3000/user/calculation',
-        data: {
-          content:b64Calc
-        },
-        headers:{
-            'authorization': authHeader
-        }
-      });
-    return response.data
-}
 
-async function getSavedCalculations(){
-    const token=getToken();
-    if(!token) throw new Error('No token found')
-    const authHeader=`Bearer ${token}`
-    const response=await axios({
-        method: 'get',
-        url: 'http://localhost:3000/user/calculation',
-        headers:{
-            'authorization': authHeader
-        }
-      });
-    return response.data
-}
-//getSavedCalculations().then((data)=>console.log(data.data))
-
-async function getSavedCalculationById(id){
-    const token=getToken();
-    if(!token) throw new Error('No token found')
-    const authHeader=`Bearer ${token}`
-    const response=await axios({
-        method: 'get',
-        url: `http://localhost:3000/user/calculation/${id}`,
-        headers:{
-            'authorization': authHeader
-        }
-      });
-    return response.data
-}
-getSavedCalculationById(15).then((data)=>console.log(JSON.parse(atob(data.data.content))))
-//saveCalculation({string:'valueasdasdasdasdaasddas'}).then(data=>alert(data.message)).catch(e=>onFetchError(e))
-function saveToken(token){
-    localStorage.setItem('default:access_token',token)
-}
-
-function onInvalidHeader(){
-    localStorage.removeItem('default:access_token')
-}
-
-function onFetchError(error){
-    if(error.response.data.message==='INVALID_OR_MISSING_HEADER'){
-        onInvalidHeader()
-        return
-    }
-    alert(error.response.data.message.toLowerCase().split('_').join(' '))
-}
-
-function getToken(){
-    return localStorage.getItem('default:access_token')
-}
-
-login('tutrai.gergo011@gmail.com','testPass').then((token)=>saveToken(token)).catch(err=>onFetchError(err));
 function procNumberInput(value, real, signed, precision, padTo, forcePad) {
 	real = typeof real !== 'undefined' ? real : true;
 	signed = typeof signed !== 'undefined' ? signed : true;
@@ -668,9 +586,17 @@ function addInterest(mounth, plusInterest){
 
 // functions by Kukel Attila <kukel.attila 'at' gmail 'dot' com>
 
-function data_load(name) {
+async function data_load(name,fromLocal=false) {
 	
-    data_from_storage = JSON.parse(sessionStorage.getItem(name));
+   //let data_from_storage = JSON.parse(sessionStorage.getItem(name));
+
+   let data_from_storage;
+   try{
+
+        data_from_storage=!fromLocal? await getSavedCalculationById(name) : JSON.parse(sessionStorage.getItem(name));
+   }catch(e){
+       onFetchError(e)
+   }
     if (data_from_storage) {
         $("#loan").val(data_from_storage.loan);
         $("#rate").val(data_from_storage.rate);
@@ -709,7 +635,7 @@ var pre_rate = new Array();
 var pre_cost = new Array();
 var pre_newdue = new Array();
 var pre_mode = new Array();
-function data_save(name) {
+async function data_save(name) {
     $.each($("#pre-inputs tr"), function (key, value) {
         if (key === 0) {
             // skip first row
@@ -743,8 +669,15 @@ function data_save(name) {
             key_count: $("input[id^=month-]").length
         }
     };
-    sessionStorage.setItem(name, JSON.stringify(data_to_save));
+    //sessionStorage.setItem(name, JSON.stringify(data_to_save));
+    try{
+        await saveCalculation(data_to_save);
+        getLoginConfirm()
+    }catch(e){
+        onFetchError(e)
+    }
 }
+    
 
 function data_export() {
     if (typeof (Storage) !== "undefined") {
@@ -763,9 +696,15 @@ function data_export() {
     }
 }
 
-function data_import_browser_delete(){
-	sessionStorage.removeItem($('#data_import_browser').val());
-	data_import_load();
+async function data_import_browser_delete(){
+    let result
+    try{
+       result= await deleteById($('#data_import_browser').val());
+    }catch(e){
+        onFetchError(e)
+    }
+	
+	getLoginConfirm();
 }
 
 function data_import_browser_load(){
@@ -775,8 +714,7 @@ function data_import_browser_load(){
 function data_export_browser() {
     if (typeof (Storage) !== "undefined") {
         //save data
-		name = $("#data_export_browser").val();
-		if (name== "")name=new Date().toISOString().substring(0, 19);
+		name=new Date().toISOString().substring(0, 19);
         data_save(name);
         alert('Elmentve a következő néven: ' + name);
 		data_import_load();
@@ -812,7 +750,7 @@ function data_import(evt) {
         return function (e) {
             try {
                 sessionStorage.setItem("UtolsóMentés", e.target.result);
-                data_load("UtolsóMentés");
+                data_load("UtolsóMentés",true);
             } catch (ex) {
 
             }
@@ -821,5 +759,143 @@ function data_import(evt) {
     reader.readAsText(f);
 }
 
+async function login(email,password){
+    
+    const _password=sha256(password)
+    const response=await axios({
+        method: 'post',
+        url: 'http://localhost:3000/login',
+        data: {
+          email,password:_password
+        }
+      });
+    return response.data.token
+}
+//login('tutrai.gergo011@gmail.com','testPass').then(token=>saveToken(token))
+async function saveCalculation(calculation){
+    const b64Calc=btoa(JSON.stringify(calculation));
+    const token=getToken();
+    if(!token) throw new Error('No token found')
+    const authHeader=`Bearer ${token}`
+    
+    const response=await axios({
+        method: 'post',
+        url: 'http://localhost:3000/user/calculation',
+        data: {
+          content:b64Calc
+        },
+        headers:{
+            'authorization': authHeader
+        }
+      });
+    return response.data
+}
+
+async function getSavedCalculations(){
+    const token=getToken();
+    if(!token) throw new Error('No token found')
+    const authHeader=`Bearer ${token}`
+    const response=await axios({
+        method: 'get',
+        url: 'http://localhost:3000/user/calculation',
+        headers:{
+            'authorization': authHeader
+        }
+      });
+    return response.data
+}
+
+async function getSavedCalculationById(id){
+    const token=getToken();
+    if(!token) throw new Error('No token found')
+    const authHeader=`Bearer ${token}`
+    const response=await axios({
+        method: 'get',
+        url: `http://localhost:3000/user/calculation/${id}`,
+        headers:{
+            'authorization': authHeader
+        }
+      });
+    return JSON.parse(atob(response.data.data.content))
+}
+function saveToken(token){
+    localStorage.setItem('default:access_token',token)
+}
+
+function onInvalidHeader(){
+    localStorage.removeItem('default:access_token')
+    getLoginConfirm()
+}
+
+function onFetchError(error){
+    if(error.message==='No token found') return getLoginConfirm();
+    if(error.response.data.message==='INVALID_OR_MISSING_HEADER'){
+        onInvalidHeader()
+        return
+    }
+    alert(error.response.data.message.toLowerCase().split('_').join(' '))
+}
+
+function getToken(){
+    return localStorage.getItem('default:access_token')
+}
+
+function validateEmail (emailAdress)
+{
+  let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  return emailAdress.match(regexEmail)
+}
+async function getLoginConfirm(){
+    let email,password;
+    let token=getToken();
+    if(!token){
+        while(!email||!password){
+            email=prompt("Please enter your email")
+            while(!validateEmail(email)){
+                email=prompt('email was not valid please re-enter')
+            }
+            if(email){
+                password=prompt('Please give us a password')
+            }
+        }
+    try{
+        token=await login(email,password)
+        saveToken(token)
+
+    }catch(e){
+        onFetchError(e)
+    }
+    }
+    let getIds
+    try{
+        getIds=await getSavedCalculations()
+        let dataImport=document.getElementById('data_import_browser')
+        dataImport.innerHTML=''
+        getIds.data.forEach((elem)=>{
+            const newElement=document.createElement('option')
+            newElement.value=elem.id
+            newElement.text=elem.createdAt
+            dataImport.appendChild(newElement)
+        })
+    } catch(e){
+        onFetchError(e)
+    }
+   
+} 
+
+async function deleteById(id){
+    const token=getToken();
+    if(!token) throw new Error('No token found')
+    const authHeader=`Bearer ${token}`
+    const response=await axios({
+        method: 'delete',
+        url: `http://localhost:3000/user/calculation/${id}`,
+        headers:{
+            'authorization': authHeader
+        }
+      });
+    return response.data
+}
 
 
+getLoginConfirm()
