@@ -5,12 +5,12 @@
 var tableinstance;
 
 $(function() {
-    $("#data_export").click(data_export);
-    //document.getElementById('data_import').addEventListener('change', data_import, false);
+    // $("#data_export").click(data_export);
+    // //document.getElementById('data_import').addEventListener('change', data_import, false);
 
-	$("#data_export_browser_button").click(data_export_browser);
-	$("#data_import_browser_load").click(data_import_browser_load);
-	$("#data_import_browser_delete").click(data_import_browser_delete);
+	// $("#data_export_browser_button").click(data_export_browser);
+	// $("#data_import_browser_load").click(data_import_browser_load);
+	// $("#data_import_browser_delete").click(data_import_browser_delete);
 	data_import_load();	
     $(".formatted-double").on("input", function(event) {
         $(this).val(procNumberInput($(this).val()));
@@ -714,7 +714,9 @@ function data_import_browser_load(){
 function data_export_browser() {
     if (typeof (Storage) !== "undefined") {
         //save data
-		name=new Date().toISOString().substring(0, 19);
+		let name=new Date().toISOString().substring(0, 19);
+        let nameValue=document.getElementById('data_export_browser').value
+        if(nameValue) name=nameValue
         data_save(name);
         alert('Elmentve a következő néven: ' + name);
 		data_import_load();
@@ -775,6 +777,7 @@ async function login(email,password){
 async function saveCalculation(calculation){
     const b64Calc=btoa(JSON.stringify(calculation));
     const token=getToken();
+    const name=document.getElementById('data_export_browser').value
     if(!token) throw new Error('No token found')
     const authHeader=`Bearer ${token}`
     
@@ -782,7 +785,8 @@ async function saveCalculation(calculation){
         method: 'post',
         url: 'http://localhost:3000/user/calculation',
         data: {
-          content:b64Calc
+          content:b64Calc,
+          name
         },
         headers:{
             'authorization': authHeader
@@ -846,40 +850,25 @@ function validateEmail (emailAdress)
   return emailAdress.match(regexEmail)
 }
 async function getLoginConfirm(){
-    let email,password;
     let token=getToken();
-    if(!token){
-        while(!email||!password){
-            email=prompt("Kérlek add meg az email címed")
-            while(!validateEmail(email)){
-                email=prompt('Érvénytelen email cím')
-            }
-            if(email){
-                password=prompt('Kérlek adj meg egy azonositó kódot')
-            }
-        }
-    try{
-        token=await login(email,password)
-        saveToken(token)
-
-    }catch(e){
-        onFetchError(e)
-    }
-    }
+    renderSave(!!token)
     let getIds
-    try{
-        getIds=await getSavedCalculations()
-        let dataImport=document.getElementById('data_import_browser')
-        dataImport.innerHTML=''
-        getIds.data.forEach((elem)=>{
-            const newElement=document.createElement('option')
-            newElement.value=elem.id
-            newElement.text=elem.createdAt
-            dataImport.appendChild(newElement)
-        })
-    } catch(e){
-        onFetchError(e)
+    if(token){
+        try{
+            getIds=await getSavedCalculations()
+            let dataImport=document.getElementById('data_import_browser')
+            dataImport.innerHTML=''
+            getIds.data.forEach((elem)=>{
+                const newElement=document.createElement('option')
+                newElement.value=elem.id
+                newElement.text=elem.name?elem.name:elem.createdAt
+                dataImport.appendChild(newElement)
+            })
+        } catch(e){
+            onFetchError(e)
+        }
     }
+    
    
 } 
 
@@ -897,5 +886,49 @@ async function deleteById(id){
     return response.data
 }
 
+function renderSave(isLoggedIn){
+    const container=document.getElementById('authRequired')
+    container.innerHTML=""
+    const saveHTML=`
+    Kalkulációs adatok mentése: <br><input id="data_export_browser" type="text" placeholder="Neve?">
+    <br/>
+    Kalkulációs adatok betöltése: 
+    <select name="data_import_browser" id="data_import_browser">
+    </select><button class="" id="data_import_browser_load" type="button">Betöltés</button><button class="" id="data_import_browser_delete" type="button">Törlés</button><button class="" id="data_export_browser_button" type="button">Mentés</button>
+    `
+    const loginHTML=`
+    <label for="email">Email:</label>
+    <input type="text" id="email" name="email"><br>
+    <label for="password">Jelszó:</label>
+    <input type="password" id="password" name="password"><br>
+    <button id="login">Belépés</button>
+    `
+    if(isLoggedIn){
+        container.innerHTML=saveHTML
+        const loadBtn=document.getElementById('data_import_browser_load')
+        const deleteBtn=document.getElementById('data_import_browser_delete')
+        const saveBtn=document.getElementById('data_export_browser_button')
+        loadBtn.addEventListener('click',data_import_browser_load)
+        deleteBtn.addEventListener('click',data_import_browser_delete)
+        saveBtn.addEventListener('click',data_export_browser)
+
+    }else {
+        container.innerHTML=loginHTML
+        const loginBtn=document.getElementById('login')
+        loginBtn.addEventListener('click',async ()=>{
+            const email = document.getElementById('email').value
+            const password = document.getElementById('password').value
+            try{
+                const token=await login(email,password)
+                saveToken(token);
+                getLoginConfirm()
+            }catch(e){
+                onFetchError(e)
+            }
+        })
+    }
+}
+
+//renderSave(true)
 
 getLoginConfirm()
