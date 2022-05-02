@@ -195,6 +195,13 @@ function torlesztoszamitas(osszeg, kamat, honapok) {
 }
 
 function calcdue() {
+
+    var run_calc = parseInt(window.localStorage["RunCalc"]);
+			if (isNaN(run_calc))run_calc = 1;
+            const token=getToken();
+            if(run_calc>20 && !token){
+                return alert("A folytatáshoz be kell jelentkezned")
+            }
     var futamido = getNumVal($('#runmonth'));
     var kamat = getNumVal($('#rate')) / 1200.0;
     var remain = getNumVal($('#loan'));
@@ -224,15 +231,19 @@ function calc() {
 		{
 			var run_calc = parseInt(window.localStorage["RunCalc"]);
 			if (isNaN(run_calc))run_calc = 1;
-			if (run_calc % 100 == 0){
-				if (run_calc < 501){
-					alert("Köszönöm, hogy használod a Hitel törlesztő kalkulátort!\nRemélem, hogy nagyon sokat tudtam segíteni abban, hogy a számodra a lehető legjobb döntést hozd meg!\n \nHa úgy érzed, hogy a munkámmal hozzájárultam az életedhez, akkor kérlek támogass engem.\n\nElőre is nagyon köszönöm.\nKis Csaba");
-				}else if(run_calc < 2001){
-					alert("Köszönöm, hogy használaod a Hitel törlesztő kalkulátort!\nÖrülök, hogy ilyen sokat használod, mert akkor gondolom hasznos számodra és segít a munkában, vagy az élet egyik legfontosabb pénzügyi döntésében!\n\nHa megteheted, kérkek támogass engem bármilyen formában, hogy tudjak hasonló hasznos tartalmakat készíteni!\nHa tudok neked bármilyen fejlesztéssel segíteni akkor is írj nyugodtan.\n\nKöszönettel, Kis Csaba");
-				}else{
-					alert("Úgy látom, hogy ezt az oldalt a munkádhoz használod, amiből neked bevételed származik. Kérlek támogasd a munkámat bármilyen módon.\nHa tudok neked esetleg segíteni bármilyen fejlesztéssel kapcsolatban, akkor vedd fel velem a kapcsolatot.\n\nKöszönöm, Kis Csaba");
-				}
-			}
+			// if (run_calc % 100 == 0){
+			// 	if (run_calc < 501){
+			// 		alert("Köszönöm, hogy használod a Hitel törlesztő kalkulátort!\nRemélem, hogy nagyon sokat tudtam segíteni abban, hogy a számodra a lehető legjobb döntést hozd meg!\n \nHa úgy érzed, hogy a munkámmal hozzájárultam az életedhez, akkor kérlek támogass engem.\n\nElőre is nagyon köszönöm.\nKis Csaba");
+			// 	}else if(run_calc < 2001){
+			// 		alert("Köszönöm, hogy használaod a Hitel törlesztő kalkulátort!\nÖrülök, hogy ilyen sokat használod, mert akkor gondolom hasznos számodra és segít a munkában, vagy az élet egyik legfontosabb pénzügyi döntésében!\n\nHa megteheted, kérkek támogass engem bármilyen formában, hogy tudjak hasonló hasznos tartalmakat készíteni!\nHa tudok neked bármilyen fejlesztéssel segíteni akkor is írj nyugodtan.\n\nKöszönettel, Kis Csaba");
+			// 	}else{
+			// 		alert("Úgy látom, hogy ezt az oldalt a munkádhoz használod, amiből neked bevételed származik. Kérlek támogasd a munkámat bármilyen módon.\nHa tudok neked esetleg segíteni bármilyen fejlesztéssel kapcsolatban, akkor vedd fel velem a kapcsolatot.\n\nKöszönöm, Kis Csaba");
+			// 	}
+			// }
+            const token=getToken();
+            if(run_calc>20 && !token){
+                return alert("A folytatáshoz be kell jelentkezned")
+            }
 			window.localStorage["RunCalc"] = run_calc +1;
 		}
 	}catch(err){};
@@ -890,11 +901,11 @@ function renderSave(isLoggedIn){
     const container=document.getElementById('authRequired')
     container.innerHTML=""
     const saveHTML=`
-    Kalkulációs adatok mentése: <br><input id="data_export_browser" type="text" placeholder="Neve?">
+    Kalkulációs adatok mentése: <br><input id="data_export_browser" type="text" placeholder="Neve?"><button class="" id="data_export_browser_button" type="button">Mentés</button>
     <br/>
     Kalkulációs adatok betöltése: 
     <select name="data_import_browser" id="data_import_browser">
-    </select><button class="" id="data_import_browser_load" type="button">Betöltés</button><button class="" id="data_import_browser_delete" type="button">Törlés</button><button class="" id="data_export_browser_button" type="button">Mentés</button>
+    </select><button class="" id="data_import_browser_load" type="button">Betöltés</button><button class="" id="data_import_browser_delete" type="button">Törlés</button>
     `
     const loginHTML=`
     <label for="email">Email:</label>
@@ -929,6 +940,7 @@ function renderSave(isLoggedIn){
     }
 }
 
-//renderSave(true)
+
+
 
 getLoginConfirm()
