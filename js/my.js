@@ -5,12 +5,12 @@
 var tableinstance;
 
 $(function() {
-    $("#data_export").click(data_export);
-    document.getElementById('data_import').addEventListener('change', data_import, false);
+    // $("#data_export").click(data_export);
+    // //document.getElementById('data_import').addEventListener('change', data_import, false);
 
-	$("#data_export_browser_button").click(data_export_browser);
-	$("#data_import_browser_load").click(data_import_browser_load);
-	$("#data_import_browser_delete").click(data_import_browser_delete);
+	// $("#data_export_browser_button").click(data_export_browser);
+	// $("#data_import_browser_load").click(data_import_browser_load);
+	// $("#data_import_browser_delete").click(data_import_browser_delete);
 	data_import_load();	
     $(".formatted-double").on("input", function(event) {
         $(this).val(procNumberInput($(this).val()));
@@ -195,6 +195,13 @@ function torlesztoszamitas(osszeg, kamat, honapok) {
 }
 
 function calcdue() {
+
+    var run_calc = parseInt(window.localStorage["RunCalc"]);
+			if (isNaN(run_calc))run_calc = 1;
+            const token=getToken();
+            if(run_calc>20 && !token){
+                return alert("A folytatáshoz be kell jelentkezned")
+            }
     var futamido = getNumVal($('#runmonth'));
     var kamat = getNumVal($('#rate')) / 1200.0;
     var remain = getNumVal($('#loan'));
@@ -224,15 +231,19 @@ function calc() {
 		{
 			var run_calc = parseInt(window.localStorage["RunCalc"]);
 			if (isNaN(run_calc))run_calc = 1;
-			if (run_calc % 100 == 0){
-				if (run_calc < 501){
-					alert("Köszönöm, hogy használod a Hitel törlesztő kalkulátort!\nRemélem, hogy nagyon sokat tudtam segíteni abban, hogy a számodra a lehető legjobb döntést hozd meg!\n \nHa úgy érzed, hogy a munkámmal hozzájárultam az életedhez, akkor kérlek támogass engem.\n\nElőre is nagyon köszönöm.\nKis Csaba");
-				}else if(run_calc < 2001){
-					alert("Köszönöm, hogy használaod a Hitel törlesztő kalkulátort!\nÖrülök, hogy ilyen sokat használod, mert akkor gondolom hasznos számodra és segít a munkában, vagy az élet egyik legfontosabb pénzügyi döntésében!\n\nHa megteheted, kérkek támogass engem bármilyen formában, hogy tudjak hasonló hasznos tartalmakat készíteni!\nHa tudok neked bármilyen fejlesztéssel segíteni akkor is írj nyugodtan.\n\nKöszönettel, Kis Csaba");
-				}else{
-					alert("Úgy látom, hogy ezt az oldalt a munkádhoz használod, amiből neked bevételed származik. Kérlek támogasd a munkámat bármilyen módon.\nHa tudok neked esetleg segíteni bármilyen fejlesztéssel kapcsolatban, akkor vedd fel velem a kapcsolatot.\n\nKöszönöm, Kis Csaba");
-				}
-			}
+			// if (run_calc % 100 == 0){
+			// 	if (run_calc < 501){
+			// 		alert("Köszönöm, hogy használod a Hitel törlesztő kalkulátort!\nRemélem, hogy nagyon sokat tudtam segíteni abban, hogy a számodra a lehető legjobb döntést hozd meg!\n \nHa úgy érzed, hogy a munkámmal hozzájárultam az életedhez, akkor kérlek támogass engem.\n\nElőre is nagyon köszönöm.\nKis Csaba");
+			// 	}else if(run_calc < 2001){
+			// 		alert("Köszönöm, hogy használaod a Hitel törlesztő kalkulátort!\nÖrülök, hogy ilyen sokat használod, mert akkor gondolom hasznos számodra és segít a munkában, vagy az élet egyik legfontosabb pénzügyi döntésében!\n\nHa megteheted, kérkek támogass engem bármilyen formában, hogy tudjak hasonló hasznos tartalmakat készíteni!\nHa tudok neked bármilyen fejlesztéssel segíteni akkor is írj nyugodtan.\n\nKöszönettel, Kis Csaba");
+			// 	}else{
+			// 		alert("Úgy látom, hogy ezt az oldalt a munkádhoz használod, amiből neked bevételed származik. Kérlek támogasd a munkámat bármilyen módon.\nHa tudok neked esetleg segíteni bármilyen fejlesztéssel kapcsolatban, akkor vedd fel velem a kapcsolatot.\n\nKöszönöm, Kis Csaba");
+			// 	}
+			// }
+            const token=getToken();
+            if(run_calc>20 && !token){
+                return alert("A folytatáshoz be kell jelentkezned")
+            }
 			window.localStorage["RunCalc"] = run_calc +1;
 		}
 	}catch(err){};
@@ -586,9 +597,17 @@ function addInterest(mounth, plusInterest){
 
 // functions by Kukel Attila <kukel.attila 'at' gmail 'dot' com>
 
-function data_load(name) {
+async function data_load(name,fromLocal=false) {
 	
-    data_from_storage = JSON.parse(sessionStorage.getItem(name));
+   //let data_from_storage = JSON.parse(sessionStorage.getItem(name));
+
+   let data_from_storage;
+   try{
+
+        data_from_storage=!fromLocal? await getSavedCalculationById(name) : JSON.parse(sessionStorage.getItem(name));
+   }catch(e){
+       onFetchError(e)
+   }
     if (data_from_storage) {
         $("#loan").val(data_from_storage.loan);
         $("#rate").val(data_from_storage.rate);
@@ -627,7 +646,7 @@ var pre_rate = new Array();
 var pre_cost = new Array();
 var pre_newdue = new Array();
 var pre_mode = new Array();
-function data_save(name) {
+async function data_save(name) {
     $.each($("#pre-inputs tr"), function (key, value) {
         if (key === 0) {
             // skip first row
@@ -661,8 +680,15 @@ function data_save(name) {
             key_count: $("input[id^=month-]").length
         }
     };
-    sessionStorage.setItem(name, JSON.stringify(data_to_save));
+    //sessionStorage.setItem(name, JSON.stringify(data_to_save));
+    try{
+        await saveCalculation(data_to_save);
+        getLoginConfirm()
+    }catch(e){
+        onFetchError(e)
+    }
 }
+    
 
 function data_export() {
     if (typeof (Storage) !== "undefined") {
@@ -681,9 +707,15 @@ function data_export() {
     }
 }
 
-function data_import_browser_delete(){
-	sessionStorage.removeItem($('#data_import_browser').val());
-	data_import_load();
+async function data_import_browser_delete(){
+    let result
+    try{
+       result= await deleteById($('#data_import_browser').val());
+    }catch(e){
+        onFetchError(e)
+    }
+	
+	getLoginConfirm();
 }
 
 function data_import_browser_load(){
@@ -693,8 +725,9 @@ function data_import_browser_load(){
 function data_export_browser() {
     if (typeof (Storage) !== "undefined") {
         //save data
-		name = $("#data_export_browser").val();
-		if (name== "")name=new Date().toISOString().substring(0, 19);
+		let name=new Date().toISOString().substring(0, 19);
+        let nameValue=document.getElementById('data_export_browser').value
+        if(nameValue) name=nameValue
         data_save(name);
         alert('Elmentve a következő néven: ' + name);
 		data_import_load();
@@ -730,7 +763,7 @@ function data_import(evt) {
         return function (e) {
             try {
                 sessionStorage.setItem("UtolsóMentés", e.target.result);
-                data_load("UtolsóMentés");
+                data_load("UtolsóMentés",true);
             } catch (ex) {
 
             }
@@ -739,5 +772,175 @@ function data_import(evt) {
     reader.readAsText(f);
 }
 
+async function login(email,password){
+    
+    const _password=sha256(password)
+    const response=await axios({
+        method: 'post',
+        url: 'http://localhost:3000/login',
+        data: {
+          email,password:_password
+        }
+      });
+    return response.data.token
+}
+//login('tutrai.gergo011@gmail.com','testPass').then(token=>saveToken(token))
+async function saveCalculation(calculation){
+    const b64Calc=btoa(JSON.stringify(calculation));
+    const token=getToken();
+    const name=document.getElementById('data_export_browser').value
+    if(!token) throw new Error('No token found')
+    const authHeader=`Bearer ${token}`
+    
+    const response=await axios({
+        method: 'post',
+        url: 'http://localhost:3000/user/calculation',
+        data: {
+          content:b64Calc,
+          name
+        },
+        headers:{
+            'authorization': authHeader
+        }
+      });
+    return response.data
+}
+
+async function getSavedCalculations(){
+    const token=getToken();
+    if(!token) throw new Error('No token found')
+    const authHeader=`Bearer ${token}`
+    const response=await axios({
+        method: 'get',
+        url: 'http://localhost:3000/user/calculation',
+        headers:{
+            'authorization': authHeader
+        }
+      });
+    return response.data
+}
+
+async function getSavedCalculationById(id){
+    const token=getToken();
+    if(!token) throw new Error('No token found')
+    const authHeader=`Bearer ${token}`
+    const response=await axios({
+        method: 'get',
+        url: `http://localhost:3000/user/calculation/${id}`,
+        headers:{
+            'authorization': authHeader
+        }
+      });
+    return JSON.parse(atob(response.data.data.content))
+}
+function saveToken(token){
+    localStorage.setItem('default:access_token',token)
+}
+
+function onInvalidHeader(){
+    localStorage.removeItem('default:access_token')
+    getLoginConfirm()
+}
+
+function onFetchError(error){
+    if(error.message==='No token found') return getLoginConfirm();
+    if(error.response.data.message==='INVALID_OR_MISSING_HEADER'){
+        onInvalidHeader()
+        return
+    }
+    alert(error.response.data.message.toLowerCase().split('_').join(' '))
+}
+
+function getToken(){
+    return localStorage.getItem('default:access_token')
+}
+
+function validateEmail (emailAdress)
+{
+  let regexEmail = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+  return emailAdress.match(regexEmail)
+}
+async function getLoginConfirm(){
+    let token=getToken();
+    renderSave(!!token)
+    let getIds
+    if(token){
+        try{
+            getIds=await getSavedCalculations()
+            let dataImport=document.getElementById('data_import_browser')
+            dataImport.innerHTML=''
+            getIds.data.forEach((elem)=>{
+                const newElement=document.createElement('option')
+                newElement.value=elem.id
+                newElement.text=elem.name?elem.name:elem.createdAt
+                dataImport.appendChild(newElement)
+            })
+        } catch(e){
+            onFetchError(e)
+        }
+    }
+    
+   
+} 
+
+async function deleteById(id){
+    const token=getToken();
+    if(!token) throw new Error('No token found')
+    const authHeader=`Bearer ${token}`
+    const response=await axios({
+        method: 'delete',
+        url: `http://localhost:3000/user/calculation/${id}`,
+        headers:{
+            'authorization': authHeader
+        }
+      });
+    return response.data
+}
+
+function renderSave(isLoggedIn){
+    const container=document.getElementById('authRequired')
+    container.innerHTML=""
+    const saveHTML=`
+    Kalkulációs adatok mentése: <br><input id="data_export_browser" type="text" placeholder="Neve?"><button class="" id="data_export_browser_button" type="button">Mentés</button>
+    <br/>
+    Kalkulációs adatok betöltése: 
+    <select name="data_import_browser" id="data_import_browser">
+    </select><button class="" id="data_import_browser_load" type="button">Betöltés</button><button class="" id="data_import_browser_delete" type="button">Törlés</button>
+    `
+    const loginHTML=`
+    <label for="email">Email:</label>
+    <input type="text" id="email" name="email"><br>
+    <label for="password">Jelszó:</label>
+    <input type="password" id="password" name="password"><br>
+    <button id="login">Belépés</button>
+    `
+    if(isLoggedIn){
+        container.innerHTML=saveHTML
+        const loadBtn=document.getElementById('data_import_browser_load')
+        const deleteBtn=document.getElementById('data_import_browser_delete')
+        const saveBtn=document.getElementById('data_export_browser_button')
+        loadBtn.addEventListener('click',data_import_browser_load)
+        deleteBtn.addEventListener('click',data_import_browser_delete)
+        saveBtn.addEventListener('click',data_export_browser)
+
+    }else {
+        container.innerHTML=loginHTML
+        const loginBtn=document.getElementById('login')
+        loginBtn.addEventListener('click',async ()=>{
+            const email = document.getElementById('email').value
+            const password = document.getElementById('password').value
+            try{
+                const token=await login(email,password)
+                saveToken(token);
+                getLoginConfirm()
+            }catch(e){
+                onFetchError(e)
+            }
+        })
+    }
+}
 
 
+
+
+getLoginConfirm()
