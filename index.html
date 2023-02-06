@@ -1,349 +1,2199 @@
 <!DOCTYPE html>
-<html>
-    <head lang="en-gb">
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-        <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Hitel Törlesztő Kalkulátor / Hitel Tervező V1.1.2</title>
-  <meta name="description" content="Egy hitel tervező, amiben szabadon állítható az előtörlesztés és a kamatláb változás. Alakítsd a hiteled! Ne higgy másnak! Számold ki magad!">
-  <meta name="keywords" content="Hitel visszafizetés, Hitel törlesztő, Hitel törlesztés, Hogy éri meg visszafizetni, Hitel tervező, Hitel változás, Hitel előtörlesztés, hitel előtörlesztés kalkulátor">
-  <meta name="author" content="Kis Csaba / Csaba504">
-        <link rel="stylesheet" href="datatables/css/jquery.dataTables.min.css">
-        <link rel="stylesheet" href="datatables/css/buttons.dataTables.min.css">
-        <link rel="stylesheet" href="css/my.css">
-        <script src="js/jquery-3.3.1.min.js"></script>
-        <script src="datatables/js/jquery.dataTables.min.js"></script>
-        <script src="datatables/js/dataTables.buttons.min.js"></script>
-        <script src="datatables/js/buttons.html5.min.js"></script>
-        <script src="datatables/js/jszip.min.js"></script>
-        <script src="datatables/js/pdfmake.min.js"></script>
-        <script src="datatables/js/vfs_fonts.js"></script>
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-        <!-- Global site tag (gtag.js) - Google Analytics -->
-		<script async src="https://www.googletagmanager.com/gtag/js?id=UA-74718697-4"></script>
-		<script>
-		  window.dataLayer = window.dataLayer || [];
-		  function gtag(){dataLayer.push(arguments);}
-		  gtag('js', new Date());
-		
-		  gtag('config', 'UA-74718697-4');
-		</script>
-    </head>
-    <body>
-        <div class="input-table">
-            <table id="inputs" class="inputs">
-                <tbody>
-                    <tr>
-                        <td><label>Hitel összege: </label></td>
-                        <td><input id="loan" class="money" type="text" placeholder="Hitel összege" value="10000000" onchange="calc();"></input> Ft</td>
-                        <td></td>
-                        <td rowspan="6" style="border-left:1px solid grey;padding-left:35px;     width: 27%;">Ebbe a részbe kerülnek a hitelkalkulátorból (bankmonitor, bankráció,...) kidobott értékek. <br/>Az "éves kamat" nem egyenlő a "THM"-mel.<br/>Ha nincs meg a kezdő törlesztőrészlet a "Törlesztő számítása" gomb segítségével kiszámolható egy optimális érték.
-                        <br><br>
-                        Hiba jelentés: <a href="https://github.com/csaba504/hitel_torleszto_kalkulator/issues">Github Issues</a><br>
-                        Kapcsolat: <a href="mailto:csaba504@gmail.com">csaba504@gmail.com</a><br>
-                        Támogatás: <a href="https://www.patreon.com/csaba504" target="new">Patreon</a> <br> 
-                        BTC: <a href="#" onclick="$('#BTC').toggle();">1M3CKbdD6RWYgHzj83sKGZrrgE7YXb5jm1</a>
-                        <img id="BTC" style="display:none;" src="BTC.png"><br>
-                        DOGE: <a href="#"  onclick="$('#DOGE').toggle();">DDiAr4awUzYB4gQtPTEUw5pYLzWd57AJbn</a>
-                        <img id="DOGE" style="display:none;" src="DOGEQR.png"><br>
-                        </td>
-                        <td rowspan="6" style="border-left:1px solid grey;padding-left:35px; text-align: left;">
-                            Kalkulációs adatok mentése: &nbsp;<button class="" id="data_export" type="button">Mentés</button><br/>
-                            Kalkulációs adatok betöltése: <input class="" id="data_import" type="file" name="data_import"></input><br/><br/><br/>
-                            Kalkulációs adatok mentése böngészőbe: <br><input id="data_export_browser" type="text" placeholder="Neve?"><button class="" id="data_export_browser_button" type="button">Mentés</button><br/>
-                            Kalkulációs adatok betöltése: 
-<select name="data_import_browser" id="data_import_browser">
-</select><button class="" id="data_import_browser_load" type="button">Betöltés</button><button class="" id="data_import_browser_delete" type="button">Törlés</button>
-                        </td>
-                    </tr>
+<html lang="hu">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/funnel.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Titillium+Web:ital,wght@0,300;0,400;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/images/favicons/apple-touch-icon.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/images/favicons/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/images/favicons/favicon-16x16.png"
+    />
+    <link rel="manifest" href="/images/favicons/site.webmanifest" />
+    <link
+      rel="mask-icon"
+      href="/images/favicons/safari-pinned-tab.svg"
+      color="#26a889"
+    />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta name="msapplication-TileColor" content="#da532c" />
+    <meta
+      name="msapplication-config"
+      content="/images/favicons/browserconfig.xml"
+    />
+    <meta name="theme-color" content="#ffffff" />
+    <script src="/js/bootstrap/bootstrap.bundle.min.js" defer></script>
+    <script src="/js/chart.min.js"></script>
+    <script src="/js/progress-bar.js" defer></script>
+    <script src="/js/jquery-3.3.1.min.js"></script>
+    <script src="/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="/datatables/js/dataTables.buttons.min.js"></script>
+    <script src="/datatables/js/buttons.html5.min.js"></script>
+    <script src="/datatables/js/jszip.min.js"></script>
+    <script src="/datatables/js/pdfmake.min.js"></script>
+    <script src="/datatables/js/vfs_fonts.js"></script>
+    <script src="/js/my.js?V1.1.2" defer></script>
+    <script src="/js/obfuscate-email.js"></script>
+    <script
+      type="text/javascript"
+      src="https://www.gstatic.com/charts/loader.js"
+    ></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=UA-74718697-4"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
 
-                    <tr>
-                        <td><label>Éves kamat: </label></td>
-                        <td><input id="rate" class="formatted-double" type="text" placeholder="Éves kamat" value="3,5" onchange="calc();"></input> %</td>
-                        <td></td>
-                    </tr>
+      gtag('config', 'UA-74718697-4');
+    </script>
 
-                    <tr>
-                        <td><label>Futamidő: </label></td>
-                        <td>
-							<input id="run" class="formatted-integer" type="text" placeholder="Év" value="15" onchange="$('#runmonth').val($(this).val() * 12);calc();" style="width: 40px;"></input> Év
-							<input id="runmonth" class="formatted-integer" type="text" placeholder="Hónap" value="" onchange="$('#run').val(Math.round($(this).val() / 12 * 100) / 100); calc();" style="width: 40px;"></input> Hónap
-						
-						</td>
-                        <td></td>
-                    </tr>
+    <title>Hitel Törlesztő Kalkulátor / Hitel Tervező</title>
+  </head>
+  <body>
+    <header class="fixed-top">
+      <div class="container pt-2 ps-3">
+        <a class="navbar-brand d-none d-lg-block green-text fw-700" href="#"
+          >Hitel törlesztő kalkulátor</a
+        >
+      </div>
+      <nav class="navbar navbar-expand-lg pb-3 navbar-dark" id="scrollspy-id">
+        <div class="container">
+          <a class="navbar-brand green-text d-lg-none fw-700" href="#"
+            >Hitel törlesztő kalkulátor</a
+          >
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav d-flex justify-content-between">
+              <a class="nav-link active" aria-current="page" href="#bevezeto"
+                >Bevezető</a
+              >
+              <a class="nav-link" href="#kalkulacio">Kalkuláció</a>
+              <a class="nav-link" href="#elotorlesztes-adatai"
+                >Előtörlesztés adatai</a
+              >
+              <a class="nav-link" href="#kamatlab">Kamatláb</a>
+              <a class="nav-link" href="#osszegzes">Összegzés</a>
+              <a class="nav-link" href="#eredmeny">Eredmény</a>
+              <!-- <a class="nav-link" href="#regisztracio">Regisztráció</a> -->
+              <div class="dummy-link"></div>
+              <!-- <div class="text-start my-auto button--navbar-wrapper">
+                <a class="button button--navbar" href="#">Bejelentkezés</a>
+              </div> -->
 
-                    <tr>
-                        <td><label>Törlesztő: </label></td>
-                        <td><input id="due" class="money" type="text" placeholder="Törlesztő" value="71489" onchange="calc();"></input> Ft</td>
-                        <td style="padding-right:35px;"><button id="tolcalc" type="button" onclick="calcdue();">Törlesztő számítása</button></td>
+              <!-- <div class="dropdown dropdown-user">
+                <button
+                  class="button--dropdown"
+                  type="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <span class="fw-bold">Teszt Elek User</span>
+                  <img
+                    src="/images/icons/arrow-down-green.svg"
+                    class="float-end mt-2"
+                    alt=""
+                  />
+                </button>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="#"
+                      data-bs-toggle="modal"
+                      data-bs-target="#EditPasswordModal"
+                      >Jelszó módosítás</a
+                    >
+                  </li>
+                  <li>
+                    <a
+                      class="dropdown-item"
+                      href="#"
+                      data-bs-toggle="modal"
+                      data-bs-target="#savedCalculationsModal"
+                      >Mentett kalkulációk</a
+                    >
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="#">Kijelentkezés</a>
+                  </li>
+                </ul>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </nav>
+      <div class="progress-container">
+        <div class="progress-bar" id="myBar"></div>
+      </div>
+    </header>
+    <main
+      class="container"
+      data-bs-spy="scroll"
+      data-bs-target="#scrollspy-id"
+      data-bs-root-margin="0px 0px -60%"
+    >
+      <section class="hero" id="bevezeto">
+        <div class="row">
+          <div
+            class="col-12 col-lg-5 hero__gray-section py-3 d-flex align-items-center"
+          >
+            <div class="hero__gray-section-content mx-auto mx-lg-0">
+              <h1 class="fw-700 hero__heading">Üdvözöljük</h1>
+              <div class="fw-300 hero__subheading">
+                a hitel törlesztő kalkulátor oldalán!
+              </div>
+              <div class="fw-bold pt-4">Miért a Hitel Kalkulátor?</div>
+              <p class="fw-300 hero__gray-section__paragraph">
+                Számos opcióval segíti a hitel kiválasztás folyamatát, hogy
+                pénzügyeid a terveid szerint alakuljanak. Más kalkulátorokkal
+                szemben, a Hitel Kalkulátor segítségével nem csak a futamidőt, a
+                törlesztőrészletet és a kamatot lehet kiszámolni, hanem
+                lehetőséget ad bevonni az előtörlesztést és a kamatlábat is a
+                számításba, ezért kifejezetten pontos és egyénre szabott a
+                kalkuláció.
+              </p>
+            </div>
+            <div class="hero__gray-section-background"></div>
+          </div>
 
-                    </tr>
-                    <tr>
-                        <td><label>Kezdő költségek: </label></td>
-                        <td><input id="startfee" class="money" type="text" placeholder="Kezdő költségek" value="0" onchange="calc();"></input> Ft</td>
-                        <td></td>
-                    </tr>
-                    <tr>
-                        <td><label>Havi költségek: </label></td>
-                        <td><input id="mountlyfee" class="money" type="text" placeholder="Havi költségek" value="0" onchange="calc();"></input> Ft</td>
-                    </tr>
-                </tbody>
+          <div class="col-12 col-lg-1"></div>
+
+          <div class="col-12 col-lg-6 d-flex hero__green-section py-4">
+            <div class="hero__green-section-content mx-auto mx-lg-0 my-auto">
+              <!-- <p>
+                Bejelentkezés nélkül 20 alkalommal tud kalkulációt készíteni,
+                bejelentkezés után bármennyi kalkuláció rendelkezésre áll. A
+                kalkulációs adatokat lehetősége van menteni és később is
+                felhasználni.
+              </p>
+              <div class="text-center text-lg-start">
+                <button
+                  class="button button--primary button__hero"
+                  href="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#LoginModal"
+                >
+                  Bejelentkezés
+                </button>
+              </div> -->
+              Hibajelentés:
+              <a
+                href="https://github.com/csaba504/hitel_torleszto_kalkulator/issues"
+                target="_blank"
+                rel="noreferrer noopener nofollow"
+                >GitHub Issues</a
+              >
+              <br />
+              Kapcsolat:
+              <a href="mailto:csaba504@gmail.com">csaba504@gmail.com</a>
+              <br />
+              Támogatás:
+              <a
+                href="https://www.patreon.com/csaba504"
+                target="_blank"
+                rel="noreferrer noopener nofollow"
+                >Patreon</a
+              >
+              <br />
+              BTC:
+              <span class="clickable" onclick="$('#BTC').toggle();"
+                >1M3CKbdD6RWYgHzj83sKGZrrgE7YXb5jm1</span
+              >
+              <div id="BTC" style="display: none" class="text-center">
+                <img src="/images/qr/btc.png" alt="BTC" loading="lazy" />
+                <br />
+              </div>
+              DOGE:
+              <span class="clickable" onclick="$('#DOGE').toggle();"
+                >DDiAr4awUzYB4gQtPTEUw5pYLzWd57AJbn</span
+              >
+              <div id="DOGE" style="display: none" class="text-center">
+                <img
+                  src="/images/qr/doge.png"
+                  alt="Doge"
+                  loading="lazy"
+                /><br />
+              </div>
+            </div>
+            <div class="hero__green-section-background"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="modals text-center border border-secondary pb-2 d-none">
+        <div>
+          Ideiglenes szekció
+          <br /><br />
+          <!-- Button trigger modal -->
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#savedCalculationsModal"
+          >
+            Mentett kalkulációk
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#RegisterModal"
+          >
+            Regisztráció
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#LoginModal"
+          >
+            Bejelentkezés
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#ForgotPasswordModal1"
+          >
+            Elfelejtett 1
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#ForgotPasswordModal2"
+          >
+            Elfelejtett 2
+          </button>
+
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#EditPasswordModal"
+          >
+            Jelszó módosítás
+          </button>
+        </div>
+
+        <!-- Saved Calculations Modal -->
+        <div
+          class="modal fade"
+          id="savedCalculationsModal"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div
+            class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal__saves"
+          >
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fw-700" id="exampleModalLabel">
+                  Mentett kalkulációk
+                </h1>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body text-start">
+                <input
+                  class="form-check-input select-all-checkbox"
+                  type="checkbox"
+                  id="checkboxNoLabel"
+                  value=""
+                  aria-label="..."
+                />
+                <div class="modal__saves__line">
+                  <div
+                    class="row gx-1 gy-2 d-flex align-items-center p-2 pb-3 justify-items-around"
+                  >
+                    <div
+                      class="col-auto col-md-12 col-xl-auto text-center text-md-start"
+                    >
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="flexCheckDefault"
+                        />
+                        <label
+                          class="form-check-label modal-label"
+                          for="flexCheckDefault"
+                        >
+                          Teszt kalkuláció lorem kalkuláció lorem lorem
+                          kalkuláció lorem
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="vr d-none d-xl-inline-block"></div>
+                    <div class="col-12 col-md-6 col-lg-auto">
+                      <div class="">
+                        <div class="d-flex justify-content-center">
+                          <div class="element-tile">Hónap: 150</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-auto">
+                      <div class="">
+                        <div class="d-flex justify-content-center">
+                          <div class="element-tile">Kamatláb: 3,5%</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-auto">
+                      <div class="">
+                        <div class="d-flex justify-content-center">
+                          <div class="element-tile">Törlesztő: 71 4534 Ft</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-auto">
+                      <div class="">
+                        <div class="d-flex justify-content-center">
+                          <div class="element-tile">Előtörlesztés: 4 db</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-auto">
+                      <div class="">
+                        <div class="d-flex justify-content-center">
+                          <div class="element-tile">Kamatperiódus: 2 db</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-auto">
+                      <div class="">
+                        <div class="d-flex justify-content-center">
+                          <div class="element-tile">Dátum: 2022.03.15.</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <br />
+                <br />
+                content
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                <br />
+                content
+                <br />
+                <br />
+                <br />
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="button button--primary"
+                  data-bs-dismiss="modal"
+                >
+                  Betöltés
+                </button>
+                <button type="button" class="button button--outline">
+                  Törlés
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Register Modal -->
+        <div
+          class="modal fade small-modal"
+          id="RegisterModal"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <h1 class="text-center">Regisztráció</h1>
+                <div class="input-group">
+                  <label for="email-registration" class="fs-14"
+                    >Email cím <span class="green-text">*</span></label
+                  >
+                </div>
+                <div class="input-group">
+                  <input
+                    type="email"
+                    id="email-registration"
+                    class="form-control mx-auto"
+                    required
+                  />
+                </div>
+
+                <div class="input-group">
+                  <p class="text-center mt-3 fw-400 fs-14">
+                    Az email cím megadása után küldünk egy generált jelszót
+                    önnek, amelyet később a beállításokban tud módosítani.
+                  </p>
+                </div>
+                <button class="button button--primary d-block mx-auto mt-3">
+                  Regisztráció
+                </button>
+
+                <br />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Login Modal -->
+        <div
+          class="modal fade small-modal"
+          id="LoginModal"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <h1 class="text-center">Bejelentkezés</h1>
+                <div class="input-group">
+                  <label for="email-login" class="fs-14"
+                    >Email cím <span class="green-text">*</span></label
+                  >
+                </div>
+                <div class="input-group">
+                  <input
+                    type="email"
+                    id="email-login"
+                    class="form-control mx-auto"
+                    required
+                  />
+                </div>
+                <div class="input-group mt-2">
+                  <label for="password-login" class="fs-14"
+                    >Jelszó <span class="green-text">*</span></label
+                  >
+                </div>
+                <div class="input-group">
+                  <input
+                    type="password"
+                    id="password-login"
+                    class="form-control mx-auto"
+                    required
+                  />
+                </div>
+                <div class="text-center mt-3">
+                  <a href="#">Elfelejtett jelszó</a>
+                </div>
+                <button class="button button--primary d-block mx-auto mt-3">
+                  Bejelentkezés
+                </button>
+
+                <br />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Forgotten Modal 1 -->
+        <div
+          class="modal fade small-modal"
+          id="ForgotPasswordModal1"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body fs-14">
+                <h1 class="text-center mb-2">Elfelejtette a jelszavát?</h1>
+                <div class="text-center mb-4">
+                  <p>Küldünk önnek egy generált jelszót</p>
+                </div>
+                <div class="input-group">
+                  <label for="email-forgotten"
+                    >Email cím <span class="green-text">*</span></label
+                  >
+                </div>
+                <div class="input-group">
+                  <input
+                    type="email"
+                    id="email-forgotten"
+                    class="form-control mx-auto"
+                    required
+                  />
+                </div>
+
+                <div>
+                  <p class="text-center mt-3">
+                    Az e-mail címre kiküldött generált jelszóval tudja
+                    azonosítani magát! A belépés után kérjük a jelszó módosítás
+                    menüpont alatt módosítsa a régi jelszavát.
+                  </p>
+                </div>
+                <button
+                  class="button button--primary d-block mx-auto mt-3 fs-16"
+                >
+                  Küldés
+                </button>
+
+                <br />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Forgotten Modal 2 -->
+        <div
+          class="modal fade small-modal"
+          id="ForgotPasswordModal2"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <h1 class="text-center mb-2">Elfelejtett jelszó</h1>
+                <div class="text-center mb-4">
+                  <p class="small-modal__message fs-18">
+                    Az új jelszavát kiküldtük az ön által megadott email címre.
+                  </p>
+                </div>
+
+                <p class="text-center mt-3 mb-5 fs-16">
+                  Nem kapta meg az emailt?
+                  <br />
+                  <a href="#">Újraküldés</a>
+                </p>
+                <button class="button button--primary d-block mx-auto mt-3">
+                  Küldés
+                </button>
+
+                <br />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Password Modal -->
+        <div
+          class="modal fade small-modal"
+          id="EditPasswordModal"
+          tabindex="-1"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body fs-14">
+                <h1 class="text-center">Jelszó módosítás</h1>
+                <div class="input-group">
+                  <label for="password-new"
+                    >Új jelszó <span class="green-text">*</span></label
+                  >
+                </div>
+                <div class="input-group">
+                  <input
+                    type="password"
+                    id="password-new"
+                    class="form-control mx-auto"
+                    required
+                  />
+                </div>
+                <div class="input-group pt-2 fs-12">
+                  <p>
+                    A megfelelő jelszóhoz 6 karakter és egy nagybetű használata
+                    szükséges.
+                  </p>
+                </div>
+                <div class="input-group mt-2">
+                  <label for="password-confirm"
+                    >Új jelszó megerősítése
+                    <span class="green-text">*</span></label
+                  >
+                </div>
+                <div class="input-group">
+                  <input
+                    type="password"
+                    id="password-confirm"
+                    class="form-control mx-auto"
+                    required
+                  />
+                </div>
+                <button
+                  class="button button--primary d-block mx-auto mt-4 fs-16"
+                >
+                  Mentés
+                </button>
+
+                <br />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="position-relative" id="kalkulacio">
+        <div class="long-dropdown__title toggle1">
+          <div>
+            Kalkuláció
+            <img
+              src="/images/icons/arrow-down.svg"
+              class="float-end mt-2"
+              alt=""
+            />
+          </div>
+        </div>
+        <div class="long-dropdown__content toggle1">
+          <div class="row">
+            <p class="col-12 col-lg-11 long-dropdown__paragraph">
+              Ebbe a részbe kerülnek a hitelkalkulátorból (bankmonitor,
+              bankráció...) kidobott értékek. Az “éves kamat” nem egyelő a
+              “THM”-mel. Ha nincs meg a kezdő törlesztőrészlet a “Törlesztő
+              számítása” gomb segítségével kiszámolható egy optimális érték.
+            </p>
+
+            <div class="col-12 col-xl-6">
+              <div class="fw-bold py-3">Törlesztő</div>
+              <div class="row g-2">
+                <div class="col-12 col-md-6 pb-4">
+                  <div>
+                    <div class="input-label">Hitel összege</div>
+                    <div class="input-group">
+                      <br />
+                      <input
+                        type="text"
+                        class="form-control money"
+                        value="10000000"
+                        id="loan"
+                        onchange="calc();"
+                      />
+                      <span class="input-group-text">Ft</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4 col-md-2">
+                  <div>
+                    <div class="input-label">Éves kamat</div>
+                    <div class="input-group">
+                      <input
+                        type="text"
+                        id="rate"
+                        class="form-control formatted-double"
+                        value="3,5"
+                        onchange="calc();"
+                      />
+                      <span class="input-group-text">%</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4 col-md-2">
+                  <div>
+                    <div class="input-label">Futam (év)</div>
+                    <div class="input-group">
+                      <input
+                        type="text"
+                        class="form-control formatted-integer"
+                        placeholder="Év"
+                        id="run"
+                        value="15"
+                        onchange="$('#runmonth').val($(this).val() * 12);calc();"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4 col-md-2">
+                  <div>
+                    <div class="input-label">(hónap)</div>
+                    <div class="input-group">
+                      <input
+                        id="runmonth"
+                        type="text"
+                        class="form-control formatted-integer"
+                        placeholder="Hónap"
+                        value="180"
+                        onchange="$('#run').val(Math.round($(this).val() / 12 * 100) / 100); calc();"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-4 col-lg-3 col-xl-6 pb-3">
+                  <div>
+                    <div class="input-label">Kezdő költségek</div>
+                    <div class="input-group">
+                      <br />
+                      <input
+                        id="startfee"
+                        type="text"
+                        class="form-control money"
+                        value="0"
+                        onchange="calc();"
+                      />
+                      <span class="input-group-text">Ft</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-4 col-lg-3 col-xl-6 pb-3">
+                  <div>
+                    <div class="input-label">Havi költségek</div>
+                    <div class="input-group">
+                      <br />
+                      <input
+                        id="mountlyfee"
+                        type="text"
+                        class="form-control money"
+                        value="0"
+                        onchange="calc();"
+                      />
+                      <span class="input-group-text">Ft</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-md-4 col-lg-3 col-xl-6 pb-3">
+                  <div>
+                    <div class="input-label pt-1">Törlesztő</div>
+                    <div class="input-group">
+                      <br />
+                      <input
+                        id="due"
+                        type="text"
+                        class="form-control money"
+                        value="71489,00"
+                        onchange="calc();"
+                      />
+                      <span class="input-group-text">Ft</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-12 col-lg-3 col-xl-6 flex-grow-1">
+                  <div
+                    class="button__calculate-wrapper text-center text-lg-end text-xl-start"
+                  >
+                    <button
+                      class="button button--primary button__calculate"
+                      id="tolcalc"
+                      onclick="calcdue();"
+                    >
+                      Számítás
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-xl-1 d-none d-xl-block"></div>
+            <div class="col-12 col-xl-5">
+              <div class="fw-bold pt-3 calculation-naming">
+                Kalkuláció elnevezése
+              </div>
+              <div class="row gx-2">
+                <div class="col-7 col-md-9 pt-1">
+                  <div class="input-group">
+                    <input
+                      id="data_export_browser"
+                      type="text"
+                      class="form-control"
+                      placeholder="Neve"
+                    />
+                  </div>
+                </div>
+                <div class="col-5 col-md-3">
+                  <button
+                    id="data_export_browser_button"
+                    class="button button--primary button__save pb-2"
+                  >
+                    Mentés
+                  </button>
+                </div>
+                <div class="col-12 col-md-7 col-lg-9 col-xl-7">
+                  <div class="fw-bold calculation-loading">
+                    Kalkulációs adatok betöltése
+                  </div>
+                  <select
+                    id="data_import_browser"
+                    class="saved-calculations button select"
+                    name="pre-mode"
+                    onchange="calc();disablecost(0);"
+                  ></select>
+                </div>
+                <div class="col-2 d-md-none"></div>
+                <div
+                  class="col-8 col-md-5 col-lg-3 col-xl-5 button__load-action_wrapper"
+                >
+                  <div class="row gx-2">
+                    <div class="col-6 px-auto d-flex justify-content-center">
+                      <button
+                        id="data_import_browser_load"
+                        class="button button--primary button__load-action"
+                      >
+                        Betöltés
+                      </button>
+                    </div>
+                    <div class="col-6 px-auto d-flex justify-content-center">
+                      <button
+                        id="data_import_browser_delete"
+                        class="button button--primary button__load-action button__load-action--outline"
+                      >
+                        Törlés
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-2 d-md-none"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="banner__wrapper">
+          <div class="banner--left">
+            <div class="banner__img-wrapper">
+              <a href="https://ensoit.hu" target="_blank">
+                <img src="/images/banner-enso-left.jpg" alt="" />
+              </a>
+            </div>
+          </div>
+          <div class="banner--right">
+            <div class="banner__img-wrapper">
+              <a href="https://ensoit.hu" target="_blank">
+                <img src="/images/banner-enso-right.jpg" alt="" />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="banner--center d-md-none">
+          <a href="https://ensoit.hu" target="_blank">
+            <picture>
+              <source
+                srcset="/images/banner-enso-mobile.avif"
+                type="image/avif"
+              />
+              <source
+                srcset="/images/banner-enso-mobile.webp"
+                type="image/webp"
+              />
+              <img src="/images/banner-enso-mobile.jpg" alt="Enso IT banner" />
+            </picture>
+          </a>
+        </div>
+
+        <div class="banner--center d-none d-md-block">
+          <a href="https://ensoit.hu" target="_blank">
+            <picture>
+              <source
+                srcset="/images/banner-enso-tablet.avif"
+                type="image/avif"
+              />
+              <source
+                srcset="/images/banner-enso-tablet.webp"
+                type="image/webp"
+              />
+              <img src="/images/banner-enso-tablet.jpg" alt="Enso IT banner" />
+            </picture>
+          </a>
+        </div>
+      </section>
+
+      <section id="elotorlesztes-adatai">
+        <div class="long-dropdown__title toggle2">
+          <div>
+            Előtörlesztések adatai
+            <img
+              src="/images/icons/arrow-down.svg"
+              class="float-end mt-2"
+              alt=""
+            />
+          </div>
+        </div>
+        <div id="pre-inputs" class="long-dropdown__content toggle2">
+          <div class="text-center">
+            <button
+              id="add-prefield"
+              class="button button--primary d-none"
+              onclick="addPreFields();"
+            >
+              Sor hozzáadása
+            </button>
+          </div>
+          <template class="prepayment-template">
+            <div class="row gx-2 gy-3 flex-xl-nowrap prepayment-row">
+              <div class="col-5 col-md-2 col-xl-1">
+                <div>
+                  <div class="input-label">Hónap</div>
+                  <div class="input-group">
+                    <input
+                      name="month"
+                      type="text"
+                      class="form-control formatted-integer"
+                      onchange="calc()"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="col-7 col-md-5 col-xl">
+                <div>
+                  <div class="input-label">Összeg</div>
+                  <div class="input-group">
+                    <br />
+                    <input
+                      name="pre-add"
+                      type="text"
+                      class="form-control money"
+                      onchange="calc();"
+                    />
+                    <span class="input-group-text">Ft</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-5 col-xl">
+                <div>
+                  <div class="input-label">Állami támogatás</div>
+                  <div class="input-group">
+                    <br />
+                    <input
+                      name="pre-aid"
+                      type="text"
+                      class="form-control money"
+                      onchange="calc();"
+                    />
+                    <span class="input-group-text">Ft</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-4 col-md-2 col-lg col-xl-1">
+                <div>
+                  <div class="input-label">Díj</div>
+                  <div class="input-group">
+                    <br />
+                    <input
+                      name="pre-rate"
+                      type="text"
+                      class="form-control formatted-double"
+                      onchange="calc();"
+                    />
+                    <span class="input-group-text">%</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-8 col-md-3 col-lg-3 col-xl">
+                <div>
+                  <div class="input-label">Szerz.mód. díj</div>
+                  <div class="input-group">
+                    <br />
+                    <input
+                      name="pre-cost"
+                      type="text"
+                      class="form-control money"
+                      disabled="disabled"
+                      onchange="calc();"
+                    />
+                    <span class="input-group-text">Ft</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col-12 col-md-2 col-lg col-xl">
+                <div>
+                  <div class="input-label">Új havi törlesztő</div>
+                  <div class="input-group">
+                    <br />
+                    <input
+                      name="pre-newdue"
+                      type="text"
+                      class="form-control money"
+                      disabled="disabled"
+                      onchange="calc();"
+                    />
+                    <span class="input-group-text">Ft</span>
+                  </div>
+                </div>
+              </div>
+              <div class="col col-md-2 col-lg-3 col-xl-3">
+                <div>
+                  <div class="input-label">Mi csökkenjen?</div>
+
+                  <select
+                    class="what-decrements button select"
+                    name="pre-mode"
+                    onchange="calc();disablecost(0);"
+                  >
+                    <option value="0">Törlesztő</option>
+                    <option value="1">Futamidő</option>
+                  </select>
+
+                  <!-- <div class="dropdown">
+                  <button
+                    class="button--dropdown"
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <span>Törlesztő</span>
+                    <img
+                      src="/images/icons/arrow-down.svg"
+                      class="float-end mt-2"
+                      alt=""
+                    />
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="#">Törlesztő</a></li>
+                    <li>
+                      <a class="dropdown-item" href="#">Futamidő</a>
+                    </li>
+                  </ul>
+                </div> -->
+                </div>
+              </div>
+              <div
+                class="col-auto col-md-3 col-xl-auto d-flex justify-content-center justify-content-md-end text-center"
+              >
+                <div class="button--action-wrapper">
+                  <button
+                    class="button--info"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    data-bs-title="Sor másolása."
+                    onclick="copyPreRow(this)"
+                  >
+                    <svg
+                      width="32"
+                      height="32"
+                      viewBox="0 0 32 32"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect
+                        x="0.5"
+                        y="0.5"
+                        width="31"
+                        height="31"
+                        rx="3.5"
+                        stroke="#7A7A7A"
+                      ></rect>
+                      <g clip-path="url(#clip0_687_2434)">
+                        <path
+                          d="M17.4286 13H9.57143C8.70479 13 8 13.7048 8 14.5714V22.4286C8 23.2952 8.70479 24 9.57143 24H17.4286C18.2952 24 19 23.2952 19 22.4286V14.5714C19 13.7048 18.2952 13 17.4286 13Z"
+                          fill="#7A7A7A"
+                        ></path>
+                        <path
+                          d="M22.4286 8H14.5714C14.1547 8 13.755 8.16556 13.4603 8.46026C13.1656 8.75496 13 9.15466 13 9.57143V11.1429H19.2857C19.7025 11.1429 20.1022 11.3084 20.3969 11.6031C20.6916 11.8978 20.8571 12.2975 20.8571 12.7143V19H22.4286C22.8453 19 23.245 18.8344 23.5397 18.5397C23.8344 18.245 24 17.8453 24 17.4286V9.57143C24 9.15466 23.8344 8.75496 23.5397 8.46026C23.245 8.16556 22.8453 8 22.4286 8Z"
+                          fill="#7A7A7A"
+                        ></path>
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_687_2434">
+                          <rect
+                            width="16"
+                            height="16"
+                            fill="white"
+                            transform="translate(8 8)"
+                          ></rect>
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </button>
+                  <button
+                    class="button--info"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    data-bs-title="Új sor hozzáadása."
+                    onclick="addPreFields();"
+                  >
+                    <svg
+                      width="32"
+                      height="32"
+                      viewBox="0 0 32 32"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect
+                        x="0.5"
+                        y="0.5"
+                        width="31"
+                        height="31"
+                        rx="3.5"
+                        stroke="#7A7A7A"
+                      ></rect>
+                      <g clip-path="url(#clip0_687_2439)">
+                        <path
+                          d="M9.71429 24H20V22.4286H9.71429V13H8V22.4286C8 23.2952 8.76886 24 9.71429 24Z"
+                          fill="#7A7A7A"
+                        ></path>
+                        <path
+                          d="M22.375 8H12.625C11.7288 8 11 8.72881 11 9.625V19.375C11 20.2712 11.7288 21 12.625 21H22.375C23.2712 21 24 20.2712 24 19.375V9.625C24 8.72881 23.2712 8 22.375 8ZM20.75 15.3125H18.3125V17.75H16.6875V15.3125H14.25V13.6875H16.6875V11.25H18.3125V13.6875H20.75V15.3125Z"
+                          fill="#7A7A7A"
+                        ></path>
+                      </g>
+                      <defs>
+                        <clipPath id="clip0_687_2439">
+                          <rect
+                            width="16"
+                            height="16"
+                            fill="white"
+                            transform="translate(8 8)"
+                          ></rect>
+                        </clipPath>
+                      </defs>
+                    </svg>
+                  </button>
+                  <button
+                    class="button--info"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="top"
+                    data-bs-title="Sor törlése."
+                    onclick="removePreRow(this)"
+                  >
+                    <svg
+                      width="32"
+                      height="32"
+                      viewBox="0 0 32 32"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect
+                        x="0.5"
+                        y="0.5"
+                        width="31"
+                        height="31"
+                        rx="3.5"
+                        stroke="#7A7A7A"
+                      ></rect>
+                      <path
+                        d="M22.9836 10.2857H18.9167V8.57143C18.9167 8.41988 18.8552 8.27453 18.7458 8.16737C18.6364 8.0602 18.488 8 18.3333 8H13.6667C13.512 8 13.3636 8.0602 13.2542 8.16737C13.1448 8.27453 13.0833 8.41988 13.0833 8.57143V10.2857H9.01641L9 11.7143H10.2031L10.9356 22.9286C10.9541 23.2186 11.0847 23.4908 11.3008 23.6898C11.5169 23.8888 11.8023 23.9998 12.099 24H19.901C20.1975 24 20.4828 23.8894 20.699 23.6907C20.9153 23.492 21.0462 23.2202 21.0652 22.9304L21.7969 11.7143H23L22.9836 10.2857ZM13.0833 21.7143L12.7552 12.5714H13.9583L14.2865 21.7143H13.0833ZM16.5833 21.7143H15.4167V12.5714H16.5833V21.7143ZM17.4583 10.2857H14.5417V9.28571C14.5417 9.24783 14.557 9.21149 14.5844 9.1847C14.6117 9.15791 14.6488 9.14286 14.6875 9.14286H17.3125C17.3512 9.14286 17.3883 9.15791 17.4156 9.1847C17.443 9.21149 17.4583 9.24783 17.4583 9.28571V10.2857ZM18.9167 21.7143H17.7135L18.0417 12.5714H19.2448L18.9167 21.7143Z"
+                        fill="#7A7A7A"
+                      ></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              <hr />
+            </div>
+          </template>
+        </div>
+      </section>
+
+      <section>
+        <div class="banner--center d-md-none">
+          <a href="https://ensoit.hu" target="_blank">
+            <picture>
+              <source
+                srcset="/images/banner-enso-mobile.avif"
+                type="image/avif"
+              />
+              <source
+                srcset="/images/banner-enso-mobile.webp"
+                type="image/webp"
+              />
+              <img src="/images/banner-enso-mobile.jpg" alt="Enso IT banner" />
+            </picture>
+          </a>
+        </div>
+
+        <div class="banner--center d-none d-md-block">
+          <a href="https://ensoit.hu" target="_blank">
+            <picture>
+              <source
+                srcset="/images/banner-enso-tablet.avif"
+                type="image/avif"
+              />
+              <source
+                srcset="/images/banner-enso-tablet.webp"
+                type="image/webp"
+              />
+              <img src="/images/banner-enso-tablet.jpg" alt="Enso IT banner" />
+            </picture>
+          </a>
+        </div>
+      </section>
+
+      <section id="kamatlab">
+        <div class="long-dropdown__title toggle3">
+          <div>
+            Kamatláb
+            <img
+              src="/images/icons/arrow-down.svg"
+              class="float-end mt-2"
+              alt=""
+            />
+          </div>
+        </div>
+        <div class="long-dropdown__content toggle3">
+          <p>
+            Ebbe a részbe kerülnek a kamatláb változások. A “hozzáad” gombbal
+            tetszőleges mennyiségű illeszthető be. A kamatperiódusok a bankok
+            átlagos kamatlábát veszik alapul időben visszafele. Ha nem fix
+            hiteled van, akkor feltétlenül kalkulálj azzal, hogy a jövőben a
+            kamatláb emelkedni fog!
+          </p>
+          <div class="row gy-2 gx-1 d-flex justify-items-between">
+            <div class="col-12 col-md-6 col-lg-4 col-xl-2 text-center">
+              <button
+                class="button--tag mx-auto"
+                onclick="addInterest(3, 2.3);calc();"
+              >
+                3 havi kamatperiódus
+              </button>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 col-xl-2 text-center">
+              <button
+                class="button--tag mx-auto"
+                onclick="addInterest(6, 2.2);calc();"
+              >
+                6 havi kamatperiódus
+              </button>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4 col-xl-2 text-center"
+              onclick="addInterest(12, 2.7);calc();"
+            >
+              <button class="button--tag mx-auto">1 éves kamatperiódus</button>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 col-xl-2 text-center">
+              <button
+                class="button--tag mx-auto"
+                onclick="addInterest(60, 3.35);calc();"
+              >
+                5 éves kamatperiódus
+              </button>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 col-xl-2 text-center">
+              <button
+                class="button--tag mx-auto"
+                onclick="addInterest(120, 4.64);calc();"
+              >
+                10 éves kamatperiódus
+              </button>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 col-xl-2 text-center">
+              <button
+                class="button--tag mx-auto"
+                onclick="addInterest(240, 5);calc();"
+              >
+                20 éves kamatperiódus
+              </button>
+            </div>
+          </div>
+          <div class="interest-wrapper">
+            <div id="interest-inputs" class="interest">
+              <div class="text-center pt-3">
+                <button
+                  id="add-interest"
+                  class="button button--primary"
+                  onclick="addInterestFields();"
+                >
+                  Sor hozzáadása
+                </button>
+              </div>
+              <template class="interest-template">
+                <div class="row gx-2 interest-row">
+                  <div class="col-3 col-lg-3 fw-bold">Változás hónapja</div>
+                  <div class="col-2 fw-bold">Új kamatláb</div>
+                  <div class="col-3 fw-bold">Mi változzon?</div>
+                  <div class="col-2 col-lg-4 fw-bold"></div>
+                  <div class="col-3 col-lg-3">
+                    <div class="input-group">
+                      <input
+                        name="interest-month"
+                        type="text"
+                        class="form-control formatted-integer"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-2">
+                    <div class="input-group">
+                      <input
+                        name="interest-rate"
+                        onchange="calc();"
+                        type="text"
+                        class="form-control"
+                      />
+                      <span class="input-group-text">%</span>
+                    </div>
+                  </div>
+                  <div class="col-3 what-changes-select">
+                    <select
+                      class="what-changes button select"
+                      name="interest-mode"
+                      onchange="calc();"
+                    >
+                      <option value="0">Törlesztő</option>
+                      <option value="1">Futamidő</option>
+                    </select>
+                  </div>
+                  <div class="col d-none d-md-block"></div>
+                  <div
+                    class="col-4 col-md-2 d-flex justify-content-center justify-content-lg-end"
+                  >
+                    <div class="button--action-wrapper mt-1">
+                      <button
+                        class="button--info"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-html="true"
+                        data-bs-title="Sor másolása."
+                        onclick="copyInterestRow(this)"
+                      >
+                        <svg
+                          width="32"
+                          height="32"
+                          viewBox="0 0 32 32"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <rect
+                            x="0.5"
+                            y="0.5"
+                            width="31"
+                            height="31"
+                            rx="3.5"
+                            stroke="#7A7A7A"
+                          />
+                          <g clip-path="url(#clip0_687_2434)">
+                            <path
+                              d="M17.4286 13H9.57143C8.70479 13 8 13.7048 8 14.5714V22.4286C8 23.2952 8.70479 24 9.57143 24H17.4286C18.2952 24 19 23.2952 19 22.4286V14.5714C19 13.7048 18.2952 13 17.4286 13Z"
+                              fill="#7A7A7A"
+                            />
+                            <path
+                              d="M22.4286 8H14.5714C14.1547 8 13.755 8.16556 13.4603 8.46026C13.1656 8.75496 13 9.15466 13 9.57143V11.1429H19.2857C19.7025 11.1429 20.1022 11.3084 20.3969 11.6031C20.6916 11.8978 20.8571 12.2975 20.8571 12.7143V19H22.4286C22.8453 19 23.245 18.8344 23.5397 18.5397C23.8344 18.245 24 17.8453 24 17.4286V9.57143C24 9.15466 23.8344 8.75496 23.5397 8.46026C23.245 8.16556 22.8453 8 22.4286 8Z"
+                              fill="#7A7A7A"
+                            />
+                          </g>
+                          <defs>
+                            <clipPath id="clip0_687_2434">
+                              <rect
+                                width="16"
+                                height="16"
+                                fill="white"
+                                transform="translate(8 8)"
+                              />
+                            </clipPath>
+                          </defs>
+                        </svg>
+                      </button>
+                      <button
+                        class="button--info"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-html="true"
+                        data-bs-title="Új sor hozzáadása."
+                        onclick="addInterestFields();"
+                      >
+                        <svg
+                          width="32"
+                          height="32"
+                          viewBox="0 0 32 32"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <rect
+                            x="0.5"
+                            y="0.5"
+                            width="31"
+                            height="31"
+                            rx="3.5"
+                            stroke="#7A7A7A"
+                          />
+                          <g clip-path="url(#clip0_687_2439)">
+                            <path
+                              d="M9.71429 24H20V22.4286H9.71429V13H8V22.4286C8 23.2952 8.76886 24 9.71429 24Z"
+                              fill="#7A7A7A"
+                            />
+                            <path
+                              d="M22.375 8H12.625C11.7288 8 11 8.72881 11 9.625V19.375C11 20.2712 11.7288 21 12.625 21H22.375C23.2712 21 24 20.2712 24 19.375V9.625C24 8.72881 23.2712 8 22.375 8ZM20.75 15.3125H18.3125V17.75H16.6875V15.3125H14.25V13.6875H16.6875V11.25H18.3125V13.6875H20.75V15.3125Z"
+                              fill="#7A7A7A"
+                            />
+                          </g>
+                          <defs>
+                            <clipPath id="clip0_687_2439">
+                              <rect
+                                width="16"
+                                height="16"
+                                fill="white"
+                                transform="translate(8 8)"
+                              />
+                            </clipPath>
+                          </defs>
+                        </svg>
+                      </button>
+                      <button
+                        class="button--info"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="top"
+                        data-bs-html="true"
+                        data-bs-title="Sor törlése."
+                        onclick="removeInterestRow(this)"
+                      >
+                        <svg
+                          width="32"
+                          height="32"
+                          viewBox="0 0 32 32"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <rect
+                            x="0.5"
+                            y="0.5"
+                            width="31"
+                            height="31"
+                            rx="3.5"
+                            stroke="#7A7A7A"
+                          />
+                          <path
+                            d="M22.9836 10.2857H18.9167V8.57143C18.9167 8.41988 18.8552 8.27453 18.7458 8.16737C18.6364 8.0602 18.488 8 18.3333 8H13.6667C13.512 8 13.3636 8.0602 13.2542 8.16737C13.1448 8.27453 13.0833 8.41988 13.0833 8.57143V10.2857H9.01641L9 11.7143H10.2031L10.9356 22.9286C10.9541 23.2186 11.0847 23.4908 11.3008 23.6898C11.5169 23.8888 11.8023 23.9998 12.099 24H19.901C20.1975 24 20.4828 23.8894 20.699 23.6907C20.9153 23.492 21.0462 23.2202 21.0652 22.9304L21.7969 11.7143H23L22.9836 10.2857ZM13.0833 21.7143L12.7552 12.5714H13.9583L14.2865 21.7143H13.0833ZM16.5833 21.7143H15.4167V12.5714H16.5833V21.7143ZM17.4583 10.2857H14.5417V9.28571C14.5417 9.24783 14.557 9.21149 14.5844 9.1847C14.6117 9.15791 14.6488 9.14286 14.6875 9.14286H17.3125C17.3512 9.14286 17.3883 9.15791 17.4156 9.1847C17.443 9.21149 17.4583 9.24783 17.4583 9.28571V10.2857ZM18.9167 21.7143H17.7135L18.0417 12.5714H19.2448L18.9167 21.7143Z"
+                            fill="#7A7A7A"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="osszegzes">
+        <div class="fw-bold py-3">Összegzés</div>
+        <div class="long-dropdown__content long-dropdown--rounded">
+          <div class="table-wrapper">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col"></th>
+                  <th scope="col">Alap szerződés</th>
+                  <th scope="col">Módosításokkal</th>
+                  <th scope="col">Eltérés</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    Törlesztéshez szükséges hónapok
+                    <button
+                      class="button--info"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      data-bs-html="true"
+                      data-bs-title="Amíg a tőke teljesen visszatörlesztésre kerül."
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M8 16C3.5816 16 0 12.4184 0 8C0 3.5816 3.5816 0 8 0C12.4184 0 16 3.5816 16 8C15.9952 12.416 12.416 15.9952 8 16ZM6.392 7.192V8.8H7.192V12H9.608V10.4H8.8L8.808 7.1928L6.392 7.192ZM7.192 4V5.6152H8.808V4H7.192Z"
+                          fill="#A3B2A6"
+                        />
+                      </svg>
+                    </button>
+                  </td>
+                  <td id="fin-full-months"></td>
+                  <td id="fin-months"></td>
+                  <td id="fin-diff-months"></td>
+                </tr>
+                <tr>
+                  <td>
+                    Kamatok és költségek
+                    <button
+                      class="button--info"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      data-bs-html="true"
+                      data-bs-title="Felvett hitel + minden kiadás."
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M8 16C3.5816 16 0 12.4184 0 8C0 3.5816 3.5816 0 8 0C12.4184 0 16 3.5816 16 8C15.9952 12.416 12.416 15.9952 8 16ZM6.392 7.192V8.8H7.192V12H9.608V10.4H8.8L8.808 7.1928L6.392 7.192ZM7.192 4V5.6152H8.808V4H7.192Z"
+                          fill="#A3B2A6"
+                        />
+                      </svg>
+                    </button>
+                  </td>
+                  <td id="fin-full-loss"></td>
+                  <td id="fin-loss"></td>
+                  <td id="fin-diff-loss"></td>
+                </tr>
+                <tr>
+                  <td>
+                    Egyéb kiadások
+                    <button
+                      class="button--info"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      data-bs-html="true"
+                      data-bs-title="<i>Minden ami nem a tőketörlesztés</i><br>Kezdő költség +<br>Havi költségek +<br>Előtörlesztések összege"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M8 16C3.5816 16 0 12.4184 0 8C0 3.5816 3.5816 0 8 0C12.4184 0 16 3.5816 16 8C15.9952 12.416 12.416 15.9952 8 16ZM6.392 7.192V8.8H7.192V12H9.608V10.4H8.8L8.808 7.1928L6.392 7.192ZM7.192 4V5.6152H8.808V4H7.192Z"
+                          fill="#A3B2A6"
+                        />
+                      </svg>
+                    </button>
+                  </td>
+                  <td id="fin-full-prepay"></td>
+                  <td id="fin-prepay"></td>
+                  <td id="fin-diff-prepay"></td>
+                </tr>
+                <tr>
+                  <td>
+                    Előtörlesztésbe befektetés
+                    <button
+                      class="button--info"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      data-bs-html="true"
+                      data-bs-title="Az összes előtörlesztés összege a futamidő alatt."
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M8 16C3.5816 16 0 12.4184 0 8C0 3.5816 3.5816 0 8 0C12.4184 0 16 3.5816 16 8C15.9952 12.416 12.416 15.9952 8 16ZM6.392 7.192V8.8H7.192V12H9.608V10.4H8.8L8.808 7.1928L6.392 7.192ZM7.192 4V5.6152H8.808V4H7.192Z"
+                          fill="#A3B2A6"
+                        />
+                      </svg>
+                    </button>
+                  </td>
+                  <td></td>
+                  <td id="fin-pluspay"></td>
+                  <td id="fin-diff-pluspay"></td>
+                </tr>
+                <tr>
+                  <td>
+                    (Állami) támogatások
+                    <button
+                      class="button--info"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      data-bs-html="true"
+                      data-bs-title="Igénybe vett (állami)támogatás<br> a futamidő alatt."
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M8 16C3.5816 16 0 12.4184 0 8C0 3.5816 3.5816 0 8 0C12.4184 0 16 3.5816 16 8C15.9952 12.416 12.416 15.9952 8 16ZM6.392 7.192V8.8H7.192V12H9.608V10.4H8.8L8.808 7.1928L6.392 7.192ZM7.192 4V5.6152H8.808V4H7.192Z"
+                          fill="#A3B2A6"
+                        />
+                      </svg>
+                    </button>
+                  </td>
+                  <td id="fin-full-aid"></td>
+                  <td id="fin-aid"></td>
+                  <td id="fin-diff-aid"></td>
+                </tr>
+                <tr>
+                  <td>
+                    Összesen fizetett
+                    <button
+                      class="button--info"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      data-bs-html="true"
+                      data-bs-title="Felvett hitel +<br>Kezdő költségek +<br>Havi költségek +<br>Előtörlesztések díja"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M8 16C3.5816 16 0 12.4184 0 8C0 3.5816 3.5816 0 8 0C12.4184 0 16 3.5816 16 8C15.9952 12.416 12.416 15.9952 8 16ZM6.392 7.192V8.8H7.192V12H9.608V10.4H8.8L8.808 7.1928L6.392 7.192ZM7.192 4V5.6152H8.808V4H7.192Z"
+                          fill="#A3B2A6"
+                        />
+                      </svg>
+                    </button>
+                  </td>
+                  <td id="fin-full-total"></td>
+                  <td id="fin-total"></td>
+                  <td id="fin-diff-total"></td>
+                </tr>
+                <tr>
+                  <td>
+                    Összesen spórolt
+                    <button
+                      class="button--info"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      data-bs-html="true"
+                      data-bs-title="Alap szerződés Összesen fizetett -<br> Módosításokkal összesen fizetett -<br> (Állami) támogatások"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M8 16C3.5816 16 0 12.4184 0 8C0 3.5816 3.5816 0 8 0C12.4184 0 16 3.5816 16 8C15.9952 12.416 12.416 15.9952 8 16ZM6.392 7.192V8.8H7.192V12H9.608V10.4H8.8L8.808 7.1928L6.392 7.192ZM7.192 4V5.6152H8.808V4H7.192Z"
+                          fill="#A3B2A6"
+                        />
+                      </svg>
+                    </button>
+                  </td>
+                  <td></td>
+                  <td></td>
+                  <td class="fin-saving"></td>
+                </tr>
+                <tr>
+                  <td>Valós THM</td>
+                  <td id="fin-full-thm"></td>
+                  <td id="fin-thm"></td>
+                  <td id="fin-diff-thm"></td>
+                </tr>
+                <tr>
+                  <td>Legnagyobb havi törlesztő</td>
+                  <td id="fin-full-months-pay"></td>
+                  <td id="fin-months-pay"></td>
+                  <td id="fin-diff-months-pay"></td>
+                </tr>
+                <tr>
+                  <td>
+                    Hitelre pluszban fizetett
+                    <button
+                      class="button--info"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      data-bs-html="true"
+                      data-bs-title="Kamatok és költségek -<br> (Állami) támogatások"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M8 16C3.5816 16 0 12.4184 0 8C0 3.5816 3.5816 0 8 0C12.4184 0 16 3.5816 16 8C15.9952 12.416 12.416 15.9952 8 16ZM6.392 7.192V8.8H7.192V12H9.608V10.4H8.8L8.808 7.1928L6.392 7.192ZM7.192 4V5.6152H8.808V4H7.192Z"
+                          fill="#A3B2A6"
+                        />
+                      </svg>
+                    </button>
+                  </td>
+                  <td class="fin-full-plus"></td>
+                  <td class="fin-plus"></td>
+                  <td id="fin-diff-plus"></td>
+                </tr>
+              </tbody>
             </table>
+            <!-- <button type="button" onclick="calc();">Számol</button> -->
+          </div>
         </div>
+      </section>
 
-        <div class="input-table">
-           Ebbe a részbe kerülnek az előtörlesztés(ek) adatai. A "Hozzáad" gombbal tetszőleges mennyiségű előtörlesztés lehetséges. Ha a kamat és a költség nincs kitöltve, 0-ás értékkel számol.<br>
-		   Fontos, hogy minden előtörlesztést a hitel törlesztésének napján számol a rendszer. Ha a hó közepén törlesztesz, akkor hozzávetőlegesen 0,6%-ot adj hozzá az előtörlesztési díjhoz!
-          
-           <hr>
-        
-            <table width="100%">
-                <tr>
-                    <td>
-                        <table id="pre-inputs" class="inputs pre-inputs" width="100%">
-                            <tr>
-                                <th style="white-space: nowrap;">Előtörlesztés hónapja</th>
-                                <th style="white-space: nowrap;">Előtörlesztés összege</th>
-                                <th style="white-space: nowrap;">Ebből (Állami)támogatás</th>
-                                <th style="white-space: nowrap;">Előtörlesztési díj</th>
-                                <th style="white-space: nowrap;">Szerződésmódosítási költség</th>
-                                <th style="white-space: nowrap;">Új havi törlesztő</th>
-                                <th style="white-space: nowrap;">Mi csökkenjen?</th>
-                            </tr>
-
-                            <tr>
-                                <td style="white-space: nowrap;"><input id="month-0" class="formatted-integer" type="text" placeholder="Hónap" onchange="calc();"></input></td>
-                                <td style="white-space: nowrap;"><input id="pre-add-0" class="money" type="text" placeholder="Összeg" onchange="calc();"></input> Ft</td>
-                                <td style="white-space: nowrap;"><input id="pre-aid-0" class="money" type="text" placeholder="Támogatás" onchange="calc();"></input> Ft</td>
-                                <td style="white-space: nowrap;"><input id="pre-rate-0" class="formatted-double" type="text" placeholder="Kamat" onchange="calc();"></input> %</td>
-                                <td style="white-space: nowrap;"><input id="pre-cost-0" class="money" type="text" placeholder="Költség" disabled=disabled onchange="calc();"></input> Ft</td>
-                                <td style="white-space: nowrap;"><input id="pre-newdue-0" class="money" type="text" placeholder="Új havi törlesztő" disabled=disabled onchange="calc();"></input> Ft</td>
-                                <td style="white-space: nowrap;padding-right:35px;">
-                                   
-								   Törlesztő<input name="pre-mode-0" type="radio" value="0" onchange="calc();disablecost(0);" checked="true"></input><input name="pre-mode-0" type="radio" value="1" onchange="calc();disablecost(0);"></input>Futamidő
-									<div class="tooltip">?<span class="tooltiptext">A bankok alapértelmezetten a<br> <b>Törlesztőt</b> csökkentik!<hr>A Futamidő csökkentése általában esetenként:<br> +60.000 Ft <br>+ 1% közjegyzői díj <br>+ előtörlesztési díj</span></div>
-								</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="left" style="margin-right:10px;padding-right:35px;">
-                        <button type="button" onclick="addPreFields();">Hozzáad</button>
-                    <td>
-                </tr>
-            </table>
+      <section id="eredmeny">
+        <div class="chart-wrapper">
+          <div class="chart-title">Tőketartozás</div>
+          <canvas id="myChart" width="400" height="120"></canvas>
         </div>
-
-        <div class="input-table">
-           Ebbe a részbe kerülnek a kamatláb változások. A "Hozzáad" gombbal tetszőleges mennyiségű illeszthető be.
-           <hr>
-        
-            <table width="100%">
-                <tr>
-                    <td>
-                        <table id="interest-inputs" class="inputs interest-inputs">
-                            <tr>
-                                <th style="white-space: nowrap;">Változás hónapja</th>
-                                <th style="white-space: nowrap;">Új kamatláb</th>
-                                <th style="white-space: nowrap;">Mi változzon?</th>
-                            </tr>
-
-                            <tr>
-                                <td style="white-space: nowrap;"><input id="interest-month-0" class="formatted-integer" type="text" placeholder="Hónap" onchange="calc();"></input></td>
-                                <td style="white-space: nowrap;"><input id="interest-rate-0" class="" type="text" placeholder="Új kamatláb" onchange="calc();"></input>%</td>
-                                <td style="white-space: nowrap;padding-right:35px;">
-                                    Törlesztő<input name="interest-mode-0" type="radio" value="0" onchange="calc();"  checked="true"></input><input name="interest-mode-0" type="radio" value="1" onchange="calc();"></input>Futamidő
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                    <td align="left" style="margin-right:10px;padding-right:35px;">
-                        <button type="button" onclick="addInterestFields();">Hozzáad</button>
-                        <button type="button" onclick="resetInterestFields();calc();">Törlés</button>
-                        <button type="button" onclick="addInterest(3, 2.3);calc();">3 havi kamatperiódus</button>
-                        <button type="button" onclick="addInterest(6, 2.2);calc();">6 havi kamatperiódus</button>
-                        <button type="button" onclick="addInterest(12, 2.7);calc();">1 éves kamatperiódus</button>
-                        <button type="button" onclick="addInterest(36, 3.2);calc();">3 éves kamatperiódus</button>
-                        <button type="button" onclick="addInterest(60, 3.35);calc();">5 éves kamatperiódus</button>
-                        <button type="button" onclick="addInterest(120, 4.64);calc();">10 éves kamatperiódus</button>
-                        <button type="button" onclick="addInterest(240, 5);calc();">20 éves kamatperiódus</button>
-                    <td>
-                </tr>
-                <tr>
-                    <td align="left">
-                        A kamatperiódusok a bankok átlagos kamatlábát veszik alapul időben visszafele. Ha nem fix hiteled van, akkor feltétlenül kalkulálj azzal, hogy a jövőben a kamatláb emelkedni fog!
-                    <td>
-                </tr>
-            </table>
-        </div>
-
-        <div class="input-table blue-border">
-        	<table id="results">
-        		<tr>
-        			<th></th>
-            		<th>Alap szerződés</th>
-            		<th>Módosításokkal</th>
-            		<th>Eltérés</th>
-            	</tr>
-        		<tr>
-        			<td>Törlesztéshez szükséges hónapok:<div class="tooltip" tooltip="">?<span class="tooltiptext">Amíg a tőke teljesen visszatörlesztésre kerül.</span></div></td>
-        			<td id="fin-full-months" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        			<td id="fin-months" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        			<td id="fin-diff-months" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        		</tr>
-        		<tr>
-        			<td>Kamatok és költségek:<div class="tooltip">?<span class="tooltiptext">Felvett hitel + minden kiadás.</span></div></td>
-        			<td id="fin-full-loss" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        			<td id="fin-loss" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        			<td id="fin-diff-loss" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        		</tr>
-        		<tr>
-        			<td>Egyéb kiadások:<div class="tooltip">?<span class="tooltiptext"><i>Minden ami nem a tőketörlesztés</i><br>Kezdő költség +<br>Havi költségek +<br>Előtörlesztések összege</span></div></td>
-        			<td id="fin-full-prepay" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        			<td id="fin-prepay" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        			<td id="fin-diff-prepay" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        		</tr>
-        		<tr>
-        			<td>Előtörlesztésbe befektetés: <div class="tooltip" tooltip="">?<span class="tooltiptext">Az összes előtörlesztés összege a futamidő alatt.</span></div></td>
-        			<td></td>
-        			<td id="fin-pluspay" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        			<td id="fin-diff-pluspay" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        		</tr>
-        		<tr>
-        			<td>(Állami) támogatások: <div class="tooltip" tooltip="">?<span class="tooltiptext">Igénybe vett (állami)támogatás<br> a futamidő alatt.</span></div></td>
-        			<td id="fin-full-aid" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        			<td id="fin-aid" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        			<td id="fin-diff-aid" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        		</tr>
-        		<tr>
-        			<td>Összesen fizetett: <div class="tooltip" tooltip="">?<span class="tooltiptext">Felvett hitel +<br>Kezdő költségek +<br>Havi költségek +<br>Előtörlesztések díja</span></div></td>
-        			<td id="fin-full-total" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        			<td id="fin-total" 			class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        			<td id="fin-diff-total" 	class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        		</tr>
-        		<tr>
-        			<td>Összesen spórolt:<div class="tooltip" tooltip="">?<span class="tooltiptext">Alap szerződés Összesen fizetett -<br> Módosításokkal összesen fizetett -<br> (Állami) támogatások</span></div></td>
-        			<td></td>
-        			<td></td>
-        			<td id="fin-saving" 	class="result-cell" style="white-space: nowrap;padding-right:35px;font-weight:bold;"></td>
-        		</tr>
-        		<tr>
-        			<td>Valós THM:</td>
-        			<td id="fin-full-thm" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        			<td id="fin-thm" 			class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        			<td id="fin-diff-thm" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        		</tr>
-        		<tr>
-        			<td>Legnagyobb havi törlesztő:</td>
-        			<td id="fin-full-months-pay" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        			<td id="fin-months-pay" 			class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        			<td id="fin-diff-months-pay" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        		</tr>
-        		<tr>
-        			<td>Hitelre pluszban fizetett:<div class="tooltip" tooltip="">?<span class="tooltiptext">Kamatok és költségek -<br> (Állami) támogatások</span></div></td>
-        			<td id="fin-full-plus" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        			<td id="fin-plus" 			class="result-cell" style="white-space: nowrap;padding-right:35px;font-weight:bold"></td>
-        			<td id="fin-diff-plus" 		class="result-cell" style="white-space: nowrap;padding-right:35px;"></td>
-        		</tr>
-        		
-        	</table>
-            <button type="button" onclick="calc();">Számol</button>
-        </div>
-
-        <div id="chart_div"></div>
-        <div id="chart_year_div"></div>
+        <!-- <div class="my-3 my-lg-5 text-center text-lg-end">
+          <button class="button button--outline">Letöltés</button>
+        </div> -->
 
         <div id="printouts" class="printouts">
-            <table id="tabla" class="printtable">
-                <thead>
-                    <tr>
-                        <th width="4%">Hónap</th>
-                        <th width="16%">Hó eleji egyenleg</th>
-                        <th width="16%">Törlesztő</th>
-                        <th width="16%">Kamatláb %</th>
-                        <th width="16%">Kamat Ft</th>
-                        <th width="16%">Tőke</th>
-                        <th width="16%">Akt. hó végéig fizetett</th>
-                        <th width="16%">Hó végi egyenleg</th>
-                    </tr>
-                </thead>
-                <tbody id="table-body">
-                </tbody>
+          <div class="table-wrapper">
+            <table id="tabla" class="table printtable">
+              <thead>
+                <tr>
+                  <th>Hónap</th>
+                  <th>Hó eleji egyenleg</th>
+                  <th>Törlesztő</th>
+                  <th>Kamatláb %</th>
+                  <th>Kamat Ft</th>
+                  <th>Tőke</th>
+                  <th>Akt. hó végéig fizetett</th>
+                  <th>Hó végi egyenleg</th>
+                </tr>
+              </thead>
+              <tbody id="table-body"></tbody>
             </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="my-2 my-lg-5">
+        <div class="banner--center d-md-none">
+          <a href="https://ensoit.hu" target="_blank">
+            <picture>
+              <source
+                srcset="/images/banner-enso-mobile.avif"
+                type="image/avif"
+              />
+              <source
+                srcset="/images/banner-enso-mobile.webp"
+                type="image/webp"
+              />
+              <img src="/images/banner-enso-mobile.jpg" alt="Enso IT banner" />
+            </picture>
+          </a>
         </div>
 
+        <div class="banner--center d-none d-md-block">
+          <a href="https://ensoit.hu" target="_blank">
+            <picture>
+              <source
+                srcset="/images/banner-enso-tablet.avif"
+                type="image/avif"
+              />
+              <source
+                srcset="/images/banner-enso-tablet.webp"
+                type="image/webp"
+              />
+              <img src="/images/banner-enso-tablet.jpg" alt="Enso IT banner" />
+            </picture>
+          </a>
+        </div>
+      </section>
+    </main>
 
-        <div id="copyright">
-            <p><small>Az oldalon tájékoztató jellegű számításokat lehet végezni egy hitel futamidejére vonatkozólag tetszőleges számú előtörlesztéssel kalkulálva. Az eredmények tájékoztató jellegűek, bármely bank valós hitelen végzett számításai ettől eltérhetnek. A szerző nem vállal felelősséget az eltérésekért és az esetleges számítási pontatlanságokért.</small></p>
-            <p><small>Copyright &copy; by <a href="mailto:csaba504@gmail.com">Csaba504</a>. Minden jog fenntartva. <a style="color: black;" href="https://github.com/csaba504/hitel_torleszto_kalkulator/blob/master/LICENSE">Apache License 2.0</a> <a style="color: black;" href="https://github.com/csaba504/hitel_torleszto_kalkulator">GitHub - Forrás kód</a>  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#" onclick="$('#moreinfo').toggle();  $('html, body').animate({ scrollTop: $(document).height() }, 1000);">BŐVEBB INFÓ</a></small></p>
-            <div id="moreinfo" style="display:none;">
-	            <p class="mih">Kérdés vagy észrevétel</p>
-	            <blockquote>
-				Bármilyen kérdés/észrevétel/javaslat esetén írj nyugodtan: <a href="mailto:csaba504@gmail.com">csaba504@gmail.com</a><br>
-				A fenti számításokat főleg a saját hitelemen ellenőriztem vissza. Ha bármilyen eltérést, hibát találsz, írj nyugodtan.
-				</blockquote>
-	            <hr>
-	            <p class="mih">Köszönet</p>
-	            <blockquote>
-					A kalkulációs oldal alapjaiért köszönet Gabonak.<br>
-					A kalkulációs adatok mentése/betöltése modulért köszönet Kukel Attilának.
-				</blockquote> 
-				<hr>
-	            <p class="mih">Verzió</p>
-	            <blockquote>
-					V1.0.0
-					<ul>
-						<li>Alapok/refaktoring</li>
-						<li>THM kalkulátor</li>
-						<li>Statisztikai adatok</li>
-						<li>Mentés kibővítése</li>
-						<li>Kamatperiódusok módosítása</li>
-						<li>Kamatlábak statisztikája visszafele</li>
-					</ul>
-				</blockquote> 		
-	            <blockquote>
-					V1.1.0
-					<ul>
-						<li>Hónapra is lehet kalkulálni</li>
-						<li>Szerződés módosításnál egyéni összeg is megadható</li>
-						<li>A hónapot és az új törlesztőket is mentse el</li>
-						<li>Legyen kompatibilis a régi mentésekkel</li>
-					</ul>
-				</blockquote>
-				<blockquote>
-					V1.1.1
-					<ul>
-						<li>Szövegezés pontosítása saját tapasztalatok alapján</li>
-						<li>Helyesírás</li>
-						<li>Fundamenta szöveg törlés</li>
-						<li>Fundamenta: 50 	hónap &nbsp; Összeg: 1 302 559 Ft Ebből támogatás: 270 769 Ft <a target="_blank" href="https://partner.fundamenta.hu/web/guest/online-kotes?tarifa=A20&haviRata=20000&szerzOssz=0" class="tooltip">?<span class="tooltiptext">Támogatás:<br> Állami támogatás +<br> Betéti kamat támogatás és befizetés után -<br> Számlanyitási díj</span></a></li>
-						<li>Fundamenta: 120 	hónap Összeg: 3 135 476 Ft Ebből támogatás: 659 276 Ft <a target="_blank" href="https://partner.fundamenta.hu/web/guest/online-kotes" class="tooltip">?<span class="tooltiptext">Támogatás:<br> Állami támogatás +<br> Betéti kamat támogatás és befizetés után -<br> Számlanyitási díj</span></a></li>
-					</ul>
-				</blockquote> 					
-				<blockquote>
-					V1.1.2
-					<ul>
-						<li>Bug Fix</li>
-						<li>thx: laszlopapai, reczuprik</li>
-						<li>Előtörlesztés díja #1</li>
-						<li>Összesen fizetett duplan szamol #3</li>
-						<li>El lehet menteni a böngészőbe is a mentett számításokat</li>
-						<li>[Feature Request] Alapadatok és törlesztők lokális tárolása #2</li>
-						<li>Támogatási blokk</li>
-						<li>Patreon: https://www.patreon.com/csaba504</li>
-						<li>BTC: 1M3CKbdD6RWYgHzj83sKGZrrgE7YXb5jm1</li>
-						<li>DOGE: DDiAr4awUzYB4gQtPTEUw5pYLzWd57AJbn</li>
-					</ul>
-				</blockquote> 					
+    <footer class="footer">
+      <div class="text-center footer-upper">
+        <div class="container">
+          <div class="row pb-md-0 pb-lg-4 d-flex flex-row-reverse">
+            <div class="col-12 col-lg-5 col-xl-4 text-lg-start my-auto">
+              <div class="donation-wrapper p-3 bg-light">
+                Hibajelentés:
+                <a
+                  href="https://github.com/csaba504/hitel_torleszto_kalkulator/issues"
+                  target="_blank"
+                  rel="noreferrer noopener nofollow"
+                  >GitHub Issues</a
+                >
+                <br />
+
+                Kapcsolat:
+                <a href="mailto:csaba504@gmail.com">csaba504@gmail.com</a>
+                <br />
+                Támogatás:
+                <a
+                  href="https://www.patreon.com/csaba504"
+                  target="_blank"
+                  rel="noreferrer noopener nofollow"
+                  >Patreon</a
+                >
+                <br />
+                BTC:
+                <span class="clickable" onclick="$('#BTC2').toggle();"
+                  >1M3CKbdD6RWYgHzj83sKGZrrgE7YXb5jm1</span
+                >
+                <div id="BTC2" style="display: none" class="text-center">
+                  <img src="/images/qr/btc.png" alt="BTC" loading="lazy" />
+                </div>
+                <br />
+                DOGE:
+                <span class="clickable" onclick="$('#DOGE2').toggle();"
+                  >DDiAr4awUzYB4gQtPTEUw5pYLzWd57AJbn</span
+                >
+                <div id="DOGE2" style="display: none" class="text-center">
+                  <img
+                    src="/images/qr/doge.png"
+                    alt="Doge"
+                    loading="lazy"
+                  /><br />
+                </div>
+              </div>
             </div>
+            <div class="col-12 col-lg-7 col-xl-8 py-4 py-lg-auto">
+              <p class="mt-3">
+                Az oldalon tájékoztató jellegű számításokat lehet végezni egy
+                hitel futamidejére vonatkozólag tetszőleges számú
+                előtörlesztéssel kalkulálva. Az eredmények tájékoztató
+                jellegűek, bármely bank valós hitelen végzett számításai ettől
+                eltérhetnek. A szerző nem vállal felelősséget az eltérésekért és
+                az esetleges számítási pontatlanságokért.
+              </p>
+            </div>
+          </div>
         </div>
-		
-		
-		
-		<script src="js/my.js?V1.1.2"></script>
-    </body>
+        <div class="text-black">
+          Copyright © by <a href="mailto:csaba504@gmail.com">Csaba504</a> .
+          Minden jog fenntartva.
+          <a
+            href="https://github.com/csaba504/hitel_torleszto_kalkulator/blob/master/LICENSE"
+            target="_blank"
+            rel="noreferrer noopener nofollow"
+            >Apache License 2.0</a
+          >
+          |
+          <a
+            href="https://github.com/csaba504/hitel_torleszto_kalkulator"
+            target="_blank"
+            rel="noreferrer noopener nofollow"
+            >GitHub - Forrás kód</a
+          >
+          |
+          <span
+            class="clickable"
+            onclick="$('#moreinfo').toggle();  $('html, body').animate({ scrollTop: $(document).height() }, 1000);"
+            >Bővebb info</span
+          >
+        </div>
+      </div>
+      <div id="moreinfo">
+        <p class="fw-bold text-black">Kérdés vagy észrevétel</p>
+        <div>
+          Bármilyen kérdés/észrevétel/javaslat esetén írj nyugodtan:
+          <a href="mailto:csaba504@gmail.com">csaba504@gmail.com</a><br />
+          A fenti számításokat főleg a saját hitelemen ellenőriztem vissza. Ha
+          bármilyen eltérést, hibát találsz, írj nyugodtan.
+        </div>
+        <hr />
+        <br />
+        <p class="fw-bold text-black">Köszönet</p>
+        <div>
+          A kalkulációs oldal alapjaiért köszönet Gabonak.
+          <br />
+          A kalkulációs adatok mentése/betöltése modulért köszönet Kukel
+          Attilának.
+          <br />
+          Az új arculat megvalósításáért köszönet Harka Dánielnek.
+        </div>
+        <hr />
+        <br />
+        <p class="fw-bold text-black">Verziók</p>
+
+        <div>
+          V2.0.0
+          <ul>
+            <li>Redesign</li>
+            <li>thx: MrDanielHarka</li>
+            <li>Új arculat</li>
+            <li>Reszponzivitás</li>
+            <li>Új diagram</li>
+            <li>Bannerek</li>
+          </ul>
+        </div>
+
+        <div>
+          V1.1.2
+          <ul>
+            <li>Bug Fix</li>
+            <li>thx: laszlopapai, reczuprik</li>
+            <li>Előtörlesztés díja #1</li>
+            <li>Összesen fizetett duplan szamol #3</li>
+            <li>El lehet menteni a böngészőbe is a mentett számításokat</li>
+            <li>
+              [Feature Request] Alapadatok és törlesztők lokális tárolása #2
+            </li>
+            <li>Támogatási blokk</li>
+            <li>Patreon: https://www.patreon.com/csaba504</li>
+            <li>
+              BTC:
+              <span class="clickable" onclick="$('#BTC3').toggle();"
+                >1M3CKbdD6RWYgHzj83sKGZrrgE7YXb5jm1</span
+              >
+              <div id="BTC3" style="display: none">
+                <img src="/images/qr/btc.png" alt="BTC" loading="lazy" />
+                <br />
+              </div>
+            </li>
+            <li>
+              DOGE:
+              <span class="clickable" onclick="$('#DOGE3').toggle();"
+                >DDiAr4awUzYB4gQtPTEUw5pYLzWd57AJbn</span
+              >
+              <div id="DOGE3" style="display: none">
+                <img
+                  src="/images/qr/doge.png"
+                  alt="Doge"
+                  loading="lazy"
+                /><br />
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          V1.1.1
+          <ul>
+            <li>Szövegezés pontosítása saját tapasztalatok alapján</li>
+            <li>Helyesírás</li>
+            <li>Fundamenta szöveg törlés</li>
+            <li>
+              Fundamenta: 50 hónap &nbsp; Összeg: 1 302 559 Ft Ebből támogatás:
+              270 769 Ft
+              <button
+                class="button--info"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                data-bs-html="true"
+                data-bs-title="Támogatás:<br> Állami támogatás +<br> Betéti kamat támogatás és befizetés után -<br> Számlanyitási díj"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 16C3.5816 16 0 12.4184 0 8C0 3.5816 3.5816 0 8 0C12.4184 0 16 3.5816 16 8C15.9952 12.416 12.416 15.9952 8 16ZM6.392 7.192V8.8H7.192V12H9.608V10.4H8.8L8.808 7.1928L6.392 7.192ZM7.192 4V5.6152H8.808V4H7.192Z"
+                    fill="#A3B2A6"
+                  />
+                </svg>
+              </button>
+            </li>
+            <li>
+              Fundamenta: 120 hónap Összeg: 3 135 476 Ft Ebből támogatás: 659
+              276 Ft
+              <button
+                class="button--info"
+                data-bs-toggle="tooltip"
+                data-bs-placement="top"
+                data-bs-html="true"
+                data-bs-title="Támogatás:<br> Állami támogatás +<br> Betéti kamat támogatás és befizetés után -<br> Számlanyitási díj"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M8 16C3.5816 16 0 12.4184 0 8C0 3.5816 3.5816 0 8 0C12.4184 0 16 3.5816 16 8C15.9952 12.416 12.416 15.9952 8 16ZM6.392 7.192V8.8H7.192V12H9.608V10.4H8.8L8.808 7.1928L6.392 7.192ZM7.192 4V5.6152H8.808V4H7.192Z"
+                    fill="#A3B2A6"
+                  />
+                </svg>
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          V1.1.0
+          <ul>
+            <li>Hónapra is lehet kalkulálni</li>
+            <li>Szerződés módosításnál egyéni összeg is megadható</li>
+            <li>A hónapot és az új törlesztőket is mentse el</li>
+            <li>Legyen kompatibilis a régi mentésekkel</li>
+          </ul>
+        </div>
+
+        <div>
+          V1.0.0
+          <ul>
+            <li>Alapok/refaktoring</li>
+            <li>THM kalkulátor</li>
+            <li>Statisztikai adatok</li>
+            <li>Mentés kibővítése</li>
+            <li>Kamatperiódusok módosítása</li>
+            <li>Kamatlábak statisztikája visszafele</li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-space"></div>
+      <div class="footer-sticky container-fluid py-3">
+        <div class="container">
+          <div class="row text-center text-lg-start">
+            <div class="col-12 col-lg-4 text-center">
+              <span class="fw-bold">Összes plusz eredetileg:</span>
+              <br class="d-md-none" />
+              <br class="d-none d-lg-block d-xxl-none" />
+              <span class="fin-full-plus"></span>
+            </div>
+            <div class="col-12 col-lg-4 text-center">
+              <span class="fw-bold"> Összes plusz előtörlesztéssel:</span>
+              <br class="d-md-none" />
+              <br class="d-none d-lg-block d-xxl-none" />
+              <span class="fin-plus"></span>
+            </div>
+            <div class="col-12 col-lg-4 text-center">
+              <span class="fw-bold">Megtakarítás:</span>
+              <br class="d-md-none" />
+              <br class="d-none d-lg-block d-xxl-none" />
+              <span class="fin-saving">0,00 Ft</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <div class="toast-container position-fixed bottom-0 end-0 p-3">
+      <div
+        id="savedToast"
+        class="toast align-items-center text-bg-light"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="d-flex">
+          <div class="toast-body"></div>
+          <button
+            type="button"
+            class="btn-close me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+
+      <div
+        id="copyToClipboard"
+        class="toast align-items-center text-bg-light"
+        role="alert"
+        aria-live="assertive"
+        aria-atomic="true"
+      >
+        <div class="d-flex">
+          <div class="toast-body">Adatok vágólapra másolva!</div>
+          <button
+            type="button"
+            class="btn-close me-2 m-auto"
+            data-bs-dismiss="toast"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>
